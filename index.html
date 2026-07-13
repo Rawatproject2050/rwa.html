@@ -43,10 +43,28 @@
             display: inline-block;
             margin-top: 10px;
         }
-        .header .count {
-            font-size: 18px;
-            font-weight: bold;
+        .header .badge.blue {
+            background: #1f6feb;
+        }
+        
+        .stats {
+            max-width: 800px;
+            margin: 0 auto 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .stat-card {
+            background: #161b22;
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 1px solid #30363d;
+            font-size: 14px;
+        }
+        .stat-card span {
             color: #00e5ff;
+            font-weight: bold;
         }
         
         .search-container {
@@ -71,26 +89,6 @@
             color: #8b949e;
         }
         
-        .stats {
-            max-width: 800px;
-            margin: 0 auto 20px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .stat-card {
-            background: #161b22;
-            padding: 12px 20px;
-            border-radius: 10px;
-            border: 1px solid #30363d;
-            font-size: 14px;
-        }
-        .stat-card span {
-            color: #00e5ff;
-            font-weight: bold;
-        }
-        
         .batch-container {
             max-width: 800px;
             margin: 0 auto;
@@ -107,7 +105,6 @@
             gap: 15px;
             border: 1px solid #30363d;
             transition: all 0.3s ease;
-            cursor: pointer;
         }
         .batch-card:hover {
             border-color: #00e5ff;
@@ -155,11 +152,18 @@
         .batch-card .info .meta .lectures {
             color: #58a6ff;
         }
+        .batch-card .info .meta .category {
+            background: #1f2937;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
         .batch-card .arrow {
             color: #8b949e;
             font-size: 20px;
             flex-shrink: 0;
             transition: color 0.3s;
+            text-decoration: none;
         }
         .batch-card:hover .arrow {
             color: #00e5ff;
@@ -240,7 +244,7 @@
         <p>Powered by <strong style="color:#00e5ff;">SPIDY UNIVERSE</strong> • Lalit bhai ke 500+ batches ab FREE</p>
         <div style="margin-top:10px;">
             <span class="badge">🔓 ALL FREE</span>
-            <span class="badge" style="background:#1f6feb; margin-left:8px;">📚 500+ Batches</span>
+            <span class="badge blue">📚 500+ Batches</span>
         </div>
     </div>
     
@@ -269,10 +273,10 @@
         // ========================================
         // 🔥 PROXY API ENDPOINT
         // ========================================
-        // ⭐ Ye URL tumhara proxy server hoga — isko badalna apne hisaab se
-        const PROXY_API = '/api/lalit';  // Agar proxy deploy hai toh yeh kaam karega
+        // ⭐ Apne proxy server ka URL yahan daalo
+        const PROXY_API = '/api/lalit';
         
-        // 🔧 Agar proxy deploy nahi hai toh direct corsproxy.io use karo
+        // 🔧 Backup: Agar proxy fail ho toh corsproxy.io use karo
         const BACKUP_API = 'https://corsproxy.io/?https://spidyuniverserwa.vercel.app/';
         
         let allBatches = [];
@@ -389,7 +393,7 @@
                     <div class="info">
                         <div class="title">${title}</div>
                         <div class="meta">
-                            <span>${category}</span>
+                            <span class="category">${category}</span>
                             <span class="lectures">📺 ${lectures} Lectures</span>
                             <span class="free">🔓 FREE</span>
                             <span style="font-size:10px; color:#8b949e;">#${index + 1}</span>
@@ -416,7 +420,6 @@
                 if (match) visibleCount++;
             });
             
-            // Update status
             document.getElementById('statusText').textContent = `✅ Showing ${visibleCount}`;
         }
         
@@ -448,7 +451,6 @@
                 }
             }
             
-            // Agar kuch nahi mila toh dummy generate karo
             if (batches.length === 0) {
                 return generateDummyBatches(577);
             }
@@ -469,7 +471,7 @@
                     link: '#',
                     thumbnail: 'https://i.postimg.cc/BQKSrcr2/logo.png',
                     category: cat,
-                    lectures: Math.floor(Math.random() * 40) + 10
+                    lectures: Math.floor(Math.random() * 30) + 5
                 });
             }
             return batches;
@@ -480,7 +482,7 @@
         // ========================================
         window.onload = function() {
             fetchBatches();
-            setInterval(fetchBatches, 300000); // Har 5 minute mein refresh
+            setInterval(fetchBatches, 300000);
         };
     </script>
 </body>
