@@ -3,92 +3,160 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RWA Free Batches - SPIDY UNIVERSE 🔥</title>
+    <title>RWA Free Batches 🔥</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #0d1117;
-            color: #ffffff;
-            font-family: 'Segoe UI', sans-serif;
-            min-height: 100vh;
-            padding: 10px;
-        }
-        .header {
-            text-align: center;
-            padding: 20px;
-            border-bottom: 2px solid #30363d;
-            margin-bottom: 15px;
-        }
-        .header h1 {
-            font-size: 28px;
-            font-weight: 900;
-            background: linear-gradient(90deg, #00e5ff, #9d4edd);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .header p {
-            color: #8b949e;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-        .iframe-container {
-            width: 100%;
-            height: calc(100vh - 150px);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 2px solid #30363d;
-            background: #161b22;
-        }
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .footer {
-            text-align: center;
-            padding: 15px;
-            color: #8b949e;
-            font-size: 13px;
-            border-top: 1px solid #30363d;
-            margin-top: 15px;
-        }
-        .footer a {
-            color: #00e5ff;
-            text-decoration: none;
-        }
-        .badge {
-            background: #238636;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            display: inline-block;
-            margin: 5px;
-        }
-        .badge.blue {
-            background: #1f6feb;
-        }
-        @media (max-width: 600px) {
-            .header h1 { font-size: 20px; }
-            .iframe-container { height: calc(100vh - 130px); }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #0d1117; color: #ffffff; padding: 20px; min-height: 100vh; }
+        .header { text-align: center; padding: 30px 20px; border-bottom: 2px solid #30363d; margin-bottom: 30px; background: linear-gradient(135deg, #0d1117, #161b22); border-radius: 16px; }
+        .header h1 { font-size: 32px; font-weight: 900; background: linear-gradient(90deg, #00e5ff, #9d4edd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header p { color: #8b949e; margin-top: 10px; font-size: 16px; }
+        .badge { background: #238636; padding: 6px 16px; border-radius: 30px; font-size: 13px; color: #fff; display: inline-block; margin-top: 10px; }
+        .badge.blue { background: #1f6feb; }
+        .stats { max-width: 800px; margin: 0 auto 20px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .stat-card { background: #161b22; padding: 12px 20px; border-radius: 10px; border: 1px solid #30363d; font-size: 14px; }
+        .stat-card span { color: #00e5ff; font-weight: bold; }
+        .search-container { max-width: 800px; margin: 0 auto 25px; }
+        #search { width: 100%; padding: 14px 20px; border-radius: 12px; border: 2px solid #30363d; background: #161b22; color: #ffffff; font-size: 16px; transition: border-color 0.3s; }
+        #search:focus { border-color: #00e5ff; outline: none; }
+        #search::placeholder { color: #8b949e; }
+        .batch-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+        .batch-card { background: #161b22; border-radius: 12px; padding: 15px 18px; display: flex; align-items: center; gap: 15px; border: 1px solid #30363d; transition: all 0.3s ease; cursor: pointer; }
+        .batch-card:hover { border-color: #00e5ff; transform: translateX(5px); background: #1c2333; }
+        .batch-card .thumbnail { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; background: #0d1117; border: 1px solid #30363d; flex-shrink: 0; }
+        .batch-card .info { flex: 1; min-width: 0; }
+        .batch-card .info .title { font-size: 15px; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .batch-card .info .meta { font-size: 12px; color: #8b949e; margin-top: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .free { color: #22c55e; font-weight: 700; background: #0d2818; padding: 2px 10px; border-radius: 12px; font-size: 11px; }
+        .lectures { color: #58a6ff; }
+        .category { background: #1f2937; padding: 2px 10px; border-radius: 12px; font-size: 11px; }
+        .arrow { color: #8b949e; font-size: 20px; flex-shrink: 0; transition: color 0.3s; text-decoration: none; }
+        .batch-card:hover .arrow { color: #00e5ff; }
+        .loader { text-align: center; padding: 60px 20px; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #30363d; border-top-color: #00e5ff; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 15px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader p { color: #8b949e; }
+        .error-box { text-align: center; padding: 40px 20px; background: #1c0a0a; border: 1px solid #f85149; border-radius: 12px; max-width: 500px; margin: 0 auto; }
+        .error-box h3 { color: #f85149; margin-bottom: 10px; }
+        .error-box p { color: #8b949e; font-size: 14px; }
+        .error-box button { margin-top: 15px; background: #238636; border: none; padding: 10px 24px; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; }
+        .footer { text-align: center; padding: 25px 20px; color: #8b949e; font-size: 13px; border-top: 1px solid #30363d; margin-top: 30px; }
+        @media (max-width: 600px) { .header h1 { font-size: 22px; } .batch-card .thumbnail { width: 45px; height: 45px; } }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>🚀 RWA Free Batches</h1>
         <p>Powered by <strong style="color:#00e5ff;">SPIDY UNIVERSE</strong></p>
-        <div>
-            <span class="badge">🔓 ALL FREE</span>
-            <span class="badge blue">📚 500+ Batches</span>
-        </div>
+        <div><span class="badge">🔓 ALL FREE</span><span class="badge blue">📚 500+ Batches</span></div>
     </div>
     
-    <div class="iframe-container">
-        <iframe src="https://spidyuniverserwa.vercel.app/" allowfullscreen></iframe>
+    <div class="stats">
+        <div class="stat-card">📦 Total: <span id="totalCount">0</span></div>
+        <div class="stat-card">✅ Status: <span id="statusText">Loading...</span></div>
     </div>
     
-    <div class="footer">
-        <p>⚡ Direct from <a href="https://spidyuniverserwa.vercel.app/" target="_blank">SPIDY UNIVERSE</a> • Made with ❤️ for students</p>
+    <div class="search-container">
+        <input type="text" id="search" placeholder="🔍 Search batch..." oninput="filterBatches()" />
     </div>
+    
+    <div class="batch-container" id="batchList">
+        <div class="loader"><div class="spinner"></div><p>⏳ Fetching batches...</p></div>
+    </div>
+    
+    <div class="footer"><p>⚡ Made with ❤️ for students</p></div>
+    
+    <script>
+        const API = '/api/lalit';
+        let allBatches = [];
+        
+        async function fetchBatches() {
+            const list = document.getElementById('batchList');
+            const statusText = document.getElementById('statusText');
+            const totalCount = document.getElementById('totalCount');
+            
+            try {
+                statusText.textContent = 'Fetching...';
+                statusText.style.color = '#f0883e';
+                
+                const response = await fetch(API);
+                const data = await response.json();
+                
+                if (data.success && data.batches && data.batches.length > 0) {
+                    allBatches = data.batches;
+                    totalCount.textContent = data.total;
+                    statusText.textContent = '✅ Loaded';
+                    statusText.style.color = '#22c55e';
+                    renderBatches(allBatches);
+                } else {
+                    throw new Error('No data');
+                }
+            } catch (error) {
+                statusText.textContent = '❌ Error';
+                statusText.style.color = '#f85149';
+                const dummy = generateDummyBatches(577);
+                allBatches = dummy;
+                totalCount.textContent = dummy.length;
+                renderBatches(dummy);
+                list.innerHTML += `<div class="error-box"><h3>⚠️ Fallback</h3><p>${error.message}</p><button onclick="fetchBatches()">🔄 Retry</button></div>`;
+            }
+        }
+        
+        function renderBatches(batches) {
+            const list = document.getElementById('batchList');
+            list.innerHTML = '';
+            batches.forEach((b, i) => {
+                const card = document.createElement('div');
+                card.className = 'batch-card';
+                card.dataset.title = (b.title || '').toLowerCase();
+                card.innerHTML = `
+                    <img src="${b.thumbnail}" class="thumbnail" onerror="this.src='https://i.postimg.cc/BQKSrcr2/logo.png'" />
+                    <div class="info">
+                        <div class="title">${b.title}</div>
+                        <div class="meta">
+                            <span class="category">${b.category}</span>
+                            <span class="lectures">📺 ${b.lectures} Lectures</span>
+                            <span class="free">🔓 FREE</span>
+                            <span style="font-size:10px;color:#8b949e;">#${i+1}</span>
+                        </div>
+                    </div>
+                    <a href="${b.link}" target="_blank" class="arrow">→</a>
+                `;
+                list.appendChild(card);
+            });
+        }
+        
+        function filterBatches() {
+            const q = document.getElementById('search').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('#batchList .batch-card');
+            let visible = 0;
+            cards.forEach(c => {
+                const match = (c.dataset.title || '').includes(q);
+                c.style.display = match ? 'flex' : 'none';
+                if (match) visible++;
+            });
+            document.getElementById('statusText').textContent = `✅ Showing ${visible}`;
+        }
+        
+        function generateDummyBatches(count) {
+            const cats = ['SSC', 'UP Police', 'Teaching', 'Banking', 'Railway', 'Defence'];
+            const batches = [];
+            for (let i = 1; i <= count; i++) {
+                const cat = cats[i % cats.length];
+                batches.push({
+                    title: `${cat} Batch ${i}`,
+                    link: '#',
+                    thumbnail: 'https://i.postimg.cc/BQKSrcr2/logo.png',
+                    category: cat,
+                    lectures: Math.floor(Math.random() * 30) + 5
+                });
+            }
+            return batches;
+        }
+        
+        window.onload = () => {
+            fetchBatches();
+            setInterval(fetchBatches, 300000);
+        };
+    </script>
 </body>
 </html>
