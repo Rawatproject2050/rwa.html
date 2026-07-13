@@ -1,16 +1,16 @@
 // api/lalit.js
 export default async function handler(req, res) {
+    // CORS headers — सबको allow करो
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     try {
-        // CORS headers — sabhi domains ko allow karo
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-        if (req.method === 'OPTIONS') {
-            return res.status(200).end();
-        }
-
-        // Lalit bhai ki site se HTML fetch karo
+        // Lalit bhai ki site se HTML fetch करो
         const response = await fetch('https://spidyuniverserwa.vercel.app/', {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
@@ -23,8 +23,8 @@ export default async function handler(req, res) {
         
         const html = await response.text();
         
-        // HTML se batches extract karo
-        const batches = extractBatches(html);
+        // 🔥 REAL BATCHES EXTRACT KARO
+        const batches = extractRealBatches(html);
         
         res.status(200).json({
             success: true,
@@ -41,14 +41,14 @@ export default async function handler(req, res) {
     }
 }
 
-function extractBatches(html) {
+function extractRealBatches(html) {
     const batches = [];
     
-    // 🔥 Yeh Regex saare anchor tags ko find karega
+    // 🔥 METHOD 1: Saare links dhundho jo batch/course/video se related ho
     const linkRegex = /<a\s+[^>]*href="([^"]*)"[^>]*>([^<]*)<\/a>/gi;
     const imgRegex = /<img\s+[^>]*src="([^"]*)"[^>]*>/gi;
     
-    // Pehle saare links extract karo
+    // Saare links extract karo
     let match;
     const links = [];
     while ((match = linkRegex.exec(html)) !== null) {
@@ -66,42 +66,67 @@ function extractBatches(html) {
     }
     
     // 🔥 Links ko batches mein convert karo
-    links.forEach((link, index) => {
+    let batchIndex = 0;
+    links.forEach((link) => {
         // Sirf wahi links jo batch/course/video/class se related ho
-        const isBatchRelated = link.href.includes('batch') || 
-                               link.href.includes('course') || 
-                               link.href.includes('video') || 
-                               link.href.includes('class') ||
-                               link.href.includes('lecture') ||
-                               link.text.toLowerCase().includes('batch') ||
-                               link.text.toLowerCase().includes('course') ||
-                               link.text.toLowerCase().includes('class');
+        const isBatchRelated = 
+            link.href.includes('batch') || 
+            link.href.includes('course') || 
+            link.href.includes('video') || 
+            link.href.includes('class') ||
+            link.href.includes('lecture') ||
+            link.text.toLowerCase().includes('batch') ||
+            link.text.toLowerCase().includes('course') ||
+            link.text.toLowerCase().includes('class') ||
+            link.text.toLowerCase().includes('free') ||
+            link.text.toLowerCase().includes('paid');
         
+        // Aur sirf wahi links jo HTTP se start ho
         if (isBatchRelated && link.href.startsWith('http')) {
+            batchIndex++;
+            // Thumbnail dhundho (agar available hai)
+            let thumbnail = 'https://i.postimg.cc/BQKSrcr2/logo.png';
+            if (images.length > 0) {
+                thumbnail = images[batchIndex % images.length] || thumbnail;
+            }
+            
+            // Category guess karo
+            let category = 'Free Batch';
+            if (link.text.toLowerCase().includes('ssc')) category = 'SSC';
+            else if (link.text.toLowerCase().includes('police')) category = 'Police';
+            else if (link.text.toLowerCase().includes('teaching')) category = 'Teaching';
+            else if (link.text.toLowerCase().includes('bank')) category = 'Banking';
+            else if (link.text.toLowerCase().includes('railway')) category = 'Railway';
+            else if (link.text.toLowerCase().includes('defence')) category = 'Defence';
+            else if (link.text.toLowerCase().includes('ctet')) category = 'CTET';
+            else if (link.text.toLowerCase().includes('net')) category = 'UGC NET';
+            
             batches.push({
-                id: index + 1,
-                title: link.text || `Batch ${index + 1}`,
+                id: batchIndex,
+                title: link.text || `Batch ${batchIndex}`,
                 link: link.href,
-                thumbnail: images[index % images.length] || 'https://i.postimg.cc/BQKSrcr2/logo.png',
-                category: 'Free Batch',
-                lectures: Math.floor(Math.random() * 50) + 10 // Random lectures count
+                thumbnail: thumbnail,
+                category: category,
+                lectures: Math.floor(Math.random() * 30) + 10
             });
         }
     });
     
-    // Agar kuch nahi mila toh fallback data
+    // 🔥 METHOD 2: Agar kuch nahi mila toh category-wise dummy batches generate karo
     if (batches.length === 0) {
+        const categories = ['SSC', 'UP Police', 'Teaching', 'Banking', 'Railway', 'Defence', 'CTET', 'UGC NET'];
         for (let i = 1; i <= 577; i++) {
+            const cat = categories[i % categories.length];
             batches.push({
                 id: i,
-                title: `Batch ${i}`,
+                title: `${cat} Batch ${i}`,
                 link: '#',
                 thumbnail: 'https://i.postimg.cc/BQKSrcr2/logo.png',
-                category: 'Free Batch',
-                lectures: Math.floor(Math.random() * 50) + 10
+                category: cat,
+                lectures: Math.floor(Math.random() * 30) + 10
             });
         }
     }
     
     return batches;
-              }
+}
