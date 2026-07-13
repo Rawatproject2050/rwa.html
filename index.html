@@ -1,239 +1,1087 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RWA Free Batches - Test 🔥</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rozgar With Ankit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #0d1117;
-            color: #ffffff;
-            padding: 20px;
+        :root {
+            --bg-deep: #050810;
+            --panel-bg: #0d1527;
+            --sidebar-bg: #080d1a;
+            --sky-blue: #00e5ff;
+            --vip-gold: #ffab00;
+            --text-main: #ffffff;
+            --text-dim: #e2e8f0;
+            --header-bg: rgba(13, 18, 34, 0.95);
+            --border-color: #223354;
         }
-        .batch-card {
-            background: #161b22;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border-left: 4px solid #00e5ff;
+
+        .light-theme {
+            --bg-deep: #f0f2f5;
+            --panel-bg: #ffffff;
+            --sidebar-bg: #f8f9fa;
+            --text-main: #1c1e21;
+            --text-dim: #4a5568;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --border-color: #cbd5e1;
         }
-        .batch-title {
-            font-size: 18px;
-            font-weight: bold;
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body { 
+            background: radial-gradient(circle at top right, #0f1c3f, var(--bg-deep));
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+            padding-bottom: 75px;
         }
-        .batch-meta {
-            color: #8b949e;
-            font-size: 14px;
-        }
-        .free-tag {
-            color: #22c55e;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        .error {
-            color: #f85149;
-            padding: 20px;
-            text-align: center;
-        }
-        #search {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            border: 1px solid #30363d;
-            background: #0d1117;
-            color: #ffffff;
-            font-size: 16px;
-        }
-        .header {
-            text-align: center;
-            padding: 20px;
-            border-bottom: 1px solid #30363d;
-            margin-bottom: 30px;
-        }
-        .badge {
-            background: #238636;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
-        .count-badge {
-            background: #1f6feb;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-left: 10px;
-        }
-        .platform-selector {
+
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            inset: 0;
+            background: #050811;
+            z-index: 10000;
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            margin: 20px 0;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s ease;
         }
-        .platform-btn {
-            background: #21262d;
-            border: 1px solid #30363d;
-            padding: 8px 16px;
-            border-radius: 20px;
-            color: #c9d1d9;
-            cursor: pointer;
-            font-weight: bold;
+        .splash-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
         }
-        .platform-btn.active {
-            background: #238636;
-            border-color: #238636;
+        
+        .splash-logo-container {
+            width: 135px;
+            height: 135px;
+            border-radius: 32px;
+            overflow: hidden;
+            border: 2.5px solid #00e5ff;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+            margin-bottom: 25px;
+            background: #080d1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .splash-logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .splash-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .splash-subtitle {
+            font-size: 11px;
+            font-weight: 700;
+            color: #00e5ff;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 35px;
+        }
+
+        .splash-progress-bg {
+            width: 160px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .splash-progress-bar {
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, #00e5ff, #9d4edd);
+            border-radius: 4px;
+            position: absolute;
+            left: -50%;
+            animation: image-style-loading 1.8s infinite ease-in-out;
+        }
+        @keyframes image-style-loading {
+            0% { left: -50%; }
+            50% { left: 30%; }
+            100% { left: 100%; }
+        }
+        .splash-footer {
+            position: absolute;
+            bottom: 40px;
+            font-size: 9px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        #main-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 18px 20px; background: var(--header-bg); 
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 2px solid var(--sky-blue);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        
+        .logo-hub { font-weight: 900; color: var(--sky-blue); letter-spacing: 1.5px; font-size: 16px; text-transform: uppercase; }
+
+        .header-timer {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(0, 229, 255, 0.1); padding: 6px 14px;
+            border-radius: 25px; border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+
+        .live-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 8px #22c55e; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        #timer-text { font-size: 13px; font-weight: 700; color: var(--text-main); }
+
+        .sidebar {
+            position: fixed; left: -100%; top: 0; width: 280px; height: 100%;
+            background: var(--sidebar-bg); z-index: 1000; transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, border-color 0.3s;
+            padding: 25px; border-right: 2px solid var(--sky-blue);
+            display: flex; flex-direction: column;
+        }
+        .sidebar.active { left: 0; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; z-index: 900; backdrop-filter: blur(5px); }
+
+        .theme-toggle-btn {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: rgba(0, 229, 255, 0.1); border: 1px solid var(--sky-blue);
+            color: var(--sky-blue); display: flex; align-items: center;
+            justify-content: center; cursor: pointer; margin-left: auto;
+            position: relative; overflow: hidden;
+        }
+
+        .menu-label { color: #4b5563; font-size: 11px; font-weight: 700; margin: 15px 0 10px 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .menu-item { display: flex; align-items: center; gap: 15px; padding: 14px; border-radius: 10px; color: var(--text-dim); text-decoration: none; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent; transition: all 0.3s; }
+        .menu-item.active { background: rgba(0, 229, 255, 0.1); color: var(--sky-blue); border-color: rgba(0, 229, 255, 0.2); }
+        
+        .btn-wa { border: 1px solid #22c55e !important; color: #22c55e !important; background: rgba(34, 197, 94, 0.05); text-decoration: none; }
+        .btn-tg { border: 1px solid var(--sky-blue) !important; color: var(--sky-blue) !important; background: rgba(0, 229, 255, 0.05); text-decoration: none; }
+
+        .pro-badge { background: #a855f720; color: #a855f7; font-size: 9px; padding: 2px 6px; border-radius: 4px; border: 1px solid #a855f7; font-weight: 900; margin-left: auto; }
+
+        #home-page, #stats-page, #saved-page, #join-page { width: 100%; animation: fadeIn 0.4s; }
+        #stats-page, #saved-page, #join-page { display: none; padding: 20px; }
+        
+        .rank-card { background: var(--panel-bg); border-radius: 20px; padding: 20px; display: flex; align-items: center; gap: 20px; margin-bottom: 20px; border: 1px solid var(--border-color); transition: all 0.3s; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .stat-box { background: var(--panel-bg); padding: 15px; border-radius: 15px; border: 1px solid var(--border-color); transition: all 0.3s; }
+        .stat-box h3 { font-size: 18px; margin-top: 5px; color: var(--text-main); }
+
+        .search-wrapper { padding: 20px 20px 15px; }
+        .search-box {
+            display: flex; align-items: center;
+            background: var(--panel-bg); border: 1px solid var(--border-color);
+            padding: 12px 16px; border-radius: 14px; gap: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.3s;
+        }
+        .search-box:focus-within { border-color: var(--sky-blue); box-shadow: 0 0 10px rgba(0, 229, 255, 0.15); }
+        .search-box i { color: var(--sky-blue); font-size: 16px; }
+        .search-box input {
+            background: transparent; border: none; outline: none;
+            color: var(--text-main); font-size: 14px; width: 100%; font-weight: 600;
+        }
+        .search-box input::placeholder { color: var(--text-dim); font-weight: 500; }
+
+        .empty-placeholder { text-align: center; padding: 60px 20px; color: var(--text-dim); }
+        .empty-placeholder i { font-size: 40px; color: var(--sky-blue); margin-bottom: 15px; opacity: 0.7; }
+        .empty-placeholder h3 { font-size: 16px; margin-bottom: 5px; color: var(--text-main); }
+        .empty-placeholder p { font-size: 13px; opacity: 0.8; }
+
+        .batch-container { padding: 15px 20px; display: flex; flex-direction: column; gap: 12px; }
+        .batch-card { 
+            background: var(--panel-bg); border-radius: 14px; padding: 12px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            border: 1px solid var(--border-color); cursor: pointer; transition: all 0.3s;
+        }
+        .batch-card:hover { border-color: var(--sky-blue); background: rgba(0, 229, 255, 0.02); }
+        .batch-left { display: flex; align-items: center; gap: 15px; }
+        .batch-img { width: 45px; height: 45px; object-fit: contain; border-radius: 10px; background: #ffffff; padding: 2px; }
+        .batch-content h3 { color: var(--text-main); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .link-icon { color: var(--text-dim); font-size: 14px; }
+        .batch-card:hover .link-icon { color: var(--sky-blue); }
+
+        .sidebar-footer { margin-top: auto; padding: 20px 0; border-top: 1px solid var(--border-color); text-align: center; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .theme-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; pointer-events: none; }
+
+        .detail-page { display: none; padding: 20px; animation: fadeIn 0.3s ease-in-out; }
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--sky-blue); font-size: 14px; font-weight: 700;
+            cursor: pointer; margin-bottom: 25px; text-transform: capitalize;
+        }
+        .detail-section-title {
+            color: var(--vip-gold); font-size: 18px; font-weight: 800;
+            margin-bottom: 15px; display: flex; align-items: center; gap: 8px;
+        }
+        .detail-card {
+            background: var(--panel-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 18px 16px; display: flex;
+            align-items: center; justify-content: space-between; max-width: 100%;
+        }
+        .detail-left { display: flex; align-items: center; gap: 15px; }
+        .detail-img { width: 55px; height: 55px; object-fit: contain; border-radius: 12px; background: #ffffff; padding: 3px; }
+        .detail-info h3 { font-size: 15px; font-weight: 800; color: var(--text-main); margin-bottom: 1px; line-height: 1.2; }
+        .detail-sub { font-size: 11px; color: var(--sky-blue); font-weight: 700; display: flex; align-items: center; gap: 4px; }
+        .detail-meta { font-size: 11px; color: var(--text-dim); margin-top: 3px; font-weight: 500; }
+        .get-btn {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-main); padding: 10px 0; width: 80px; height: 42px;
+            border-radius: 22px; font-weight: 700; font-size: 12px; cursor: pointer;
+            text-align: center; text-decoration: none; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; line-height: 1.1; transition: all 0.3s;
+        }
+        .get-btn span { font-size: 8px; color: var(--text-dim); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .get-btn:hover { background: var(--text-main); color: var(--bg-deep); }
+
+        .bottom-navbar {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: #090e1a; border-top: 1px solid #1e2d54;
+            display: flex; justify-content: space-around; align-items: center; padding: 10px 0 8px; z-index: 999;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5); transition: all 0.3s;
+        }
+        .light-theme .bottom-navbar { background: #ffffff; border-top: 1px solid #cbd5e1; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
+        
+        .nav-tab { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #9ca3af; cursor: pointer; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; transition: all 0.2s ease; flex: 1; text-align: center; }
+        .nav-tab i { font-size: 18px; }
+        .nav-tab.active-tab { color: var(--sky-blue); }
+        .nav-tab:active i { transform: scale(0.85); }
+
+        #dev-profile-page { display: none; padding: 20px 15px; background: #060b16; animation: fadeIn 0.4s ease-in-out; }
+        .dev-header-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
+        .dev-back-circle { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; }
+        .dev-nav-title { text-align: center; }
+        .dev-nav-title h2 { font-size: 15px; font-weight: 900; letter-spacing: 1.5px; color: #ffffff; text-shadow: 0 0 10px rgba(0, 229, 255, 0.3); }
+        .dev-nav-title p { font-size: 11px; color: #00e5ff; font-weight: 800; letter-spacing: 1px; }
+        .dev-status-badge { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.4); color: #2ecc71; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+        .dev-status-dot { width: 6px; height: 6px; background: #2ecc71; border-radius: 50%; box-shadow: 0 0 8px #2ecc71; }
+
+        .dev-hero-section { text-align: center; margin-bottom: 30px; position: relative; }
+        .dev-tag-bubble { display: inline-flex; align-items: center; gap: 6px; background: rgba(157,78,221,0.25); border: 1px solid #bf5af2; color: #e5dbff; padding: 7px 18px; border-radius: 30px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 20px; text-transform: uppercase; }
+        
+        .dev-avatar-wrapper { width: 145px; height: 145px; margin: 0 auto 20px; position: relative; }
+        .dev-avatar-glow { width: 100%; height: 100%; border-radius: 50%; border: 3px solid #00e5ff; padding: 4px; background: linear-gradient(135deg, #00e5ff, #bf5af2); box-shadow: 0 0 30px rgba(0,229,255,0.45); }
+        .dev-avatar-glow img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #080d1a; }
+        .dev-verified-shield { position: absolute; bottom: 5px; right: 8px; width: 28px; height: 28px; background: #00e5ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #050810; font-size: 13px; border: 2px solid #050810; font-weight: bold; }
+
+        .dev-main-name { font-size: 34px; font-weight: 900; font-style: italic; letter-spacing: 0.5px; color: #ffffff; text-shadow: 0 0 15px rgba(0, 229, 255, 0.4); }
+        .dev-main-title { font-size: 12px; font-weight: 800; color: #00e5ff; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 8px; line-height: 1.5; padding: 0 20px; }
+        
+        .dev-capsules-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 20px 0; }
+        .dev-capsule { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 7px 14px; font-size: 11px; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 6px; }
+
+        .dev-counters-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 25px 0; }
+        .dev-counter-card { background: #0d162d; border: 2px solid #1e2d54; border-radius: 16px; padding: 15px 10px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .dev-counter-card i { font-size: 20px; margin-bottom: 8px; }
+        .dev-counter-card h2 { font-size: 22px; font-weight: 900; color: #ffffff; }
+        .dev-counter-card p { font-size: 10px; color: #a0aec0; font-weight: 800; letter-spacing: 0.5px; margin-top: 3px; text-transform: uppercase; }
+
+        .dev-wa-sticky-btn { background: linear-gradient(90deg, #00c853, #1b5e20); color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; border-radius: 16px; font-size: 14px; font-weight: 800; text-decoration: none; box-shadow: 0 6px 25px rgba(0,200,83,0.4); margin: 25px 0; transition: transform 0.2s; }
+        .dev-wa-sticky-btn:active { transform: scale(0.98); }
+
+        .dev-section-heading { font-size: 14px; font-weight: 900; letter-spacing: 1.5px; color: #ffab00; text-transform: uppercase; margin: 35px 0 18px 5px; display: flex; align-items: center; gap: 8px; }
+        .dev-section-heading span { border-bottom: 2px solid rgba(255,255,255,0.15); flex-grow: 1; margin-left: 10px; }
+
+        .dev-info-panel { background: #0d162d; border: 2px solid #1e2d54; border-radius: 18px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .dev-info-panel p { font-size: 13.5px; color: #ffffff; line-height: 1.6; font-weight: 600; }
+        .dev-info-panel strong { color: #00e5ff; font-weight: 800; }
+        .dev-info-panel blockquote { border-left: 3px solid #bf5af2; padding-left: 12px; margin-top: 15px; font-size: 13px; font-style: italic; color: #cbd5e1; font-weight: 500; }
+
+        .dev-row-card { background: #0d162d; border: 2px solid #1e2d54; border-radius: 16px; padding: 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; text-decoration: none; color: inherit; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+        .dev-row-left { display: flex; align-items: center; gap: 15px; }
+        
+        .dev-row-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #ffffff; font-weight: bold; }
+        .icon-rwa { background: linear-gradient(135deg, #1e3a8a, #3b82f6); box-shadow: 0 0 12px rgba(59,130,246,0.4); }
+        .icon-secure { background: linear-gradient(135deg, #0d9488, #00e5ff); box-shadow: 0 0 12px rgba(0,229,255,0.4); }
+        .icon-tools { background: linear-gradient(135deg, #7c3aed, #bf5af2); box-shadow: 0 0 12px rgba(191,90,242,0.4); }
+        .icon-yt { background: linear-gradient(135deg, #b91c1c, #ef4444); box-shadow: 0 0 12px rgba(239,68,68,0.4); }
+        .icon-insta { background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); box-shadow: 0 0 12px rgba(220,39,67,0.4); }
+        .icon-secure-brand { background: linear-gradient(135deg, #0088cc, #24a1de); box-shadow: 0 0 12px rgba(36,161,222,0.4); }
+        .icon-wa-brand { background: linear-gradient(135deg, #075e54, #25d366); box-shadow: 0 0 12px rgba(37,211,102,0.4); }
+        .icon-portal { background: linear-gradient(135deg, #111827, #374151); box-shadow: 0 0 12px rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); }
+
+        .dev-row-text h4 { font-size: 15px; font-weight: 800; color: #ffffff; }
+        .dev-row-text p { font-size: 12px; color: #cbd5e1; margin-top: 3px; font-weight: 600; }
+        .dev-live-badge { background: rgba(34,197,94,0.2); border: 1px solid #2ecc71; color: #2ecc71; font-size: 9px; padding: 2px 7px; border-radius: 5px; font-weight: 900; margin-left: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .dev-tech-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+        .dev-tech-tag { background: #0d162d; border: 2px solid #1e2d54; color: #ffffff; padding: 9px 16px; border-radius: 10px; font-size: 12px; font-weight: 800; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+
+        .dev-footer-credits { text-align: center; padding: 30px 0 10px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px; }
+        .dev-footer-links { display: flex; justify-content: center; gap: 15px; font-size: 12px; font-weight: 800; color: #00e5ff; margin-bottom: 15px; }
+        .dev-footer-credits p { font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
     </style>
 </head>
-<body>
+<body onload="initSystem()">
 
-    <div class="header">
-        <h1>🚀 RWA Free Batches <span class="badge">TEST 🔥</span></h1>
-        <p>Powered by SPIDY UNIVERSE • <span id="batchCount">0</span> Batches Loaded</p>
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-logo-container">
+            <img src="https://i.postimg.cc/BQKSrcr2/logo.png" alt="Logo">
+        </div>
+        <h1 class="splash-title">ROZGAR WITH ANKIT</h1>
+        <div class="splash-subtitle">Powered by Santosh Rawat</div>
+        <div class="splash-progress-bg">
+            <div class="splash-progress-bar"></div>
+        </div>
+        <div class="splash-footer">Secure Application Engine</div>
     </div>
 
-    <div style="max-width: 800px; margin: 0 auto;">
-        <input type="text" id="search" placeholder="🔍 Search your batch..." oninput="filterBatches()" />
-        <div id="batchList"></div>
+    <div id="theme-overlay" class="theme-overlay"></div>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+            <div style="width:50px; height:50px; border-radius:12px; overflow:hidden; border: 2px solid var(--sky-blue);">
+                <img src="https://i.postimg.cc/BQKSrcr2/logo.png" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <div>
+                <h2 style="font-size:16px;">RAWAT•ACADEMY</h2>
+                <span style="font-size:10px; color:var(--sky-blue); font-weight: bold;">SANTOSH♡RAWAT</span>
+            </div>
+            <div class="theme-toggle-btn" onclick="toggleTheme(event)">
+                <i id="theme-icon" class="fas fa-moon"></i>
+            </div>
+        </div>
+
+        <div class="menu-label">Main Menu</div>
+        <div id="btn-sidebar-home" class="menu-item active" onclick="showPage('home')"><i class="fas fa-home"></i> Home</div>
+        <div id="btn-sidebar-saved" class="menu-item" onclick="showPage('saved')"><i class="fas fa-bookmark"></i> Saved Batches</div>
+        <div id="btn-sidebar-stats" class="menu-item" onclick="showPage('stats')"><i class="fas fa-chart-line"></i> My Stats</div>
+        
+        <div class="menu-label">Community</div>
+        <a href="https://whatsapp.com/channel/0029Vb7zTcuJ93wQVoVEw21K" class="menu-item btn-wa" target="_blank"><i class="fab fa-whatsapp"></i> Join WhatsApp</a>
+        <a href="https://t.me/RAWAT_ACADEMY_HUB" class="menu-item btn-tg" target="_blank"><i class="fab fa-telegram-plane"></i> Join Telegram</a>
+
+        <div class="menu-label">System</div>
+        <div id="btn-sidebar-dev" class="menu-item" onclick="showPage('developer')"><i class="fas fa-user-ninja"></i> Developer Profile <span class="pro-badge">PRO</span></div>
+
+        <div class="sidebar-footer">
+            <div style="color: #22c55e; font-size: 11px; font-weight: 800; margin-bottom: 5px;">● SYSTEM SECURE</div>
+            <p style="font-size: 9px; color: #4b5563; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                RAWAT ACADEMY • SANTOSH RAWAT
+            </p>
+        </div>
+    </div>
+
+    <header id="main-header">
+        <i class="fas fa-bars-staggered" style="font-size: 22px; color: var(--sky-blue); cursor:pointer;" onclick="toggleMenu()"></i>
+        <div class="logo-hub">ROZGAR WITH ANKIT</div>
+        <div class="header-timer">
+            <div class="live-dot"></div>
+            <div id="timer-text">0h 00m</div>
+        </div>
+    </header>
+
+    <div id="home-page">
+        <div class="search-wrapper">
+            <div class="search-box">
+                <i class="fas fa-magnifying-glass"></i>
+                <input type="text" id="search-input" placeholder="Search your batch..." oninput="filterPlatforms()">
+            </div>
+        </div>
+
+        <div class="batch-container" id="platform-list">
+        </div>
+    </div>
+
+    <div id="saved-page">
+        <div class="empty-placeholder">
+            <i class="fas fa-bookmark"></i>
+            <h3>Saved Batches</h3>
+            <p>No batches saved yet. Your bookmarked items will appear here.</p>
+        </div>
+    </div>
+
+    <div id="join-page">
+        <div style="padding: 10px 5px;">
+            <h2 style="font-size: 18px; color: var(--vip-gold); font-weight: 800; margin-bottom: 20px; text-align: center; text-transform: uppercase; letter-spacing: 0.5px;">Join Our Official Community</h2>
+            
+            <a href="https://whatsapp.com/channel/0029Vb7zTcuJ93wQVoVEw21K" target="_blank" class="dev-row-card" style="border-color: #25d366;">
+                <div class="dev-row-left">
+                    <div class="dev-row-icon" style="background: linear-gradient(135deg, #075e54, #25d366);"><i class="fab fa-whatsapp"></i></div>
+                    <div class="dev-row-text">
+                        <h4>WhatsApp Channel</h4>
+                        <p>Get daily free apps, links & study tools instantly.</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: #25d366;"></i>
+            </a>
+
+            <a href="https://t.me/RAWAT_ACADEMY_HUB" target="_blank" class="dev-row-card" style="border-color: #24a1de; margin-top: 15px;">
+                <div class="dev-row-left">
+                    <div class="dev-row-icon" style="background: linear-gradient(135deg, #0088cc, #24a1de);"><i class="fab fa-telegram-plane"></i></div>
+                    <div class="dev-row-text">
+                        <h4>Telegram Channel</h4>
+                        <p>Free resources, premium materials & updates.</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: #24a1de;"></i>
+            </a>
+        </div>
+    </div>
+
+    <div id="detail-page" class="detail-page">
+        <div class="back-btn" onclick="closeDetails()">
+            <i class="fas fa-arrow-left"></i> Back to Hub
+        </div>
+        
+        <div class="detail-section-title">
+            <i class="fas fa-fire" style="color: var(--vip-gold)"></i> Top Free Batches / Apps
+        </div>
+
+        <div class="detail-card">
+            <div class="detail-left">
+                <img id="det-img" src="" class="detail-img">
+                <div class="detail-info">
+                    <h3 id="det-title">PLATFORM NAME</h3>
+                    <div class="detail-sub">
+                        ROZGAR WITH ANKIT<i class="fas fa-check-circle" style="font-size:10px;"></i>
+                    </div>
+                    <div class="detail-meta" id="det-meta">
+                        Education • 50K+ • ★ 4.9
+                    </div>
+                </div>
+            </div>
+            <a href="#" id="det-link" class="get-btn">
+                GET
+                <span>FREE</span>
+            </a>
+        </div>
+    </div>
+
+    <div id="stats-page">
+        <div class="rank-card">
+            <div style="width:60px; height:60px; background:#111827; border-radius:15px; display:flex; align-items:center; justify-content:center; border:1px solid #1f2937;"><i class="fas fa-chess-pawn" style="font-size:30px; color:#9ca3af;"></i></div>
+            <div>
+                <p style="font-size:11px; color:#9ca3af; font-weight:700;">CURRENT RANK</p>
+                <h1 id="rank-display" style="font-size:32px; font-weight:900;">NOOB</h1>
+                <p id="eff-display" style="font-size:12px; color:#9ca3af;">Level 0.0 • 10% Efficiency</p>
+            </div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-box"><i class="fas fa-mobile-alt" style="color:#6366f1;"></i><p style="font-size:10px; color:#9ca3af;">APP TIME</p><h3 id="timer-display">0h 0m 0s</h3></div>
+            <div class="stat-box"><i class="fas fa-book-open" style="color:#22c55e;"></i><p style="font-size:10px; color:#9ca3af;">STUDY TIME</p><h3 id="study-display">0h 0m</h3></div>
+            <div class="stat-box"><i class="fas fa-fire" style="color:#f97316;"></i><p style="font-size:10px; color:#9ca3af;">STREAK</p><h3>1 Days</h3></div>
+            <div class="stat-box"><i class="fas fa-check-circle" style="color:#ef4444;"></i><p style="font-size:10px; color:#9ca3af;">COMPLETED</p><h3 id="lecs-display">0 Lecs</h3></div>
+        </div>
+    </div>
+
+    <div id="dev-profile-page">
+        <div class="dev-header-nav">
+            <div class="dev-back-circle" onclick="closeDevPage()"><i class="fas fa-arrow-left"></i></div>
+            <div class="dev-nav-title">
+                <h2>MEET THE DEVELOPER</h2>
+                <p>SANTOSH♡RAWAT</p>
+            </div>
+            <div class="dev-status-badge">
+                <div class="dev-status-dot"></div> Active
+            </div>
+        </div>
+
+        <div class="dev-hero-section">
+            <div class="dev-tag-bubble"><i class="fas fa-wand-magic-sparkles"></i> FOUNDER • RAWAT ACADEMY</div>
+            <div class="dev-avatar-wrapper">
+                <div class="dev-avatar-glow">
+                    <img src="https://i.postimg.cc/Fz6RLKzq/Developer.png" alt="Santosh Rawat">
+                </div>
+                <div class="dev-verified-shield"><i class="fas fa-check"></i></div>
+            </div>
+            <h1 class="dev-main-name">SANTOSH RAWAT</h1>
+            <p class="dev-main-title">FULL STACK DEVELOPER • EDUCATION PLATFORM BUILDER</p>
+
+            <div class="dev-capsules-grid">
+                <div class="dev-capsule"><i class="fas fa-crown" style="color:var(--vip-gold);"></i> Rawat Hub Founder</div>
+                <div class="dev-capsule"><i class="fas fa-heart" style="color:#ff4d6d;"></i> Free Education Advocate</div>
+                <div class="dev-capsule"><i class="fas fa-code" style="color:#00e5ff;"></i> Full Stack Architect</div>
+                <div class="dev-capsule"><i class="fas fa-lock" style="color:#2ec4b6;"></i> Secure Streaming</div>
+            </div>
+        </div>
+
+        <div class="dev-counters-row">
+            <div class="dev-counter-card">
+                <i class="fas fa-book-bookmark" style="color:#bf5af2;"></i>
+                <h2>5+</h2>
+                <p>Free Batches</p>
+            </div>
+            <div class="dev-counter-card">
+                <i class="fas fa-bolt" style="color:#ffab00;"></i>
+                <h2>50K+</h2>
+                <p>Students Helped</p>
+            </div>
+            <div class="dev-counter-card">
+                <i class="fas fa-globe" style="color:#00e5ff;"></i>
+                <h2>200+</h2>
+                <p>Study Materials</p>
+            </div>
+        </div>
+
+        <a href="https://whatsapp.com/channel/0029Vb7zTcuJ93wQVoVEw21K" target="_blank" class="dev-wa-sticky-btn">
+            <i class="fab fa-whatsapp" style="font-size:18px;"></i> Get Free Study Material on WhatsApp 🔥
+        </a>
+
+        <div class="dev-section-heading"><i class="fas fa-heart"></i> WHO IS SANTOSH RAWAT? <span></span></div>
+        
+        <div class="dev-info-panel">
+            <p>Santosh Rawat is a <strong>Full Stack Developer</strong> and the founder of <strong>ROZGAR WITH ANKIT</strong> — India's free education platform built for students who <strong>cannot afford paid batches or coaching</strong>. He believes that the quality of your education should never depend on the size of your wallet.</p>
+            <blockquote>"Every student deserves access to great teachers, great content, and great tools — completely free. That's why I build." <br><strong>— Santosh Rawat, Founder</strong></blockquote>
+        </div>
+
+        <div class="dev-info-panel" style="margin-top:12px;">
+            <p style="font-size:14px; font-weight:800; color:#00e5ff; margin-bottom:8px;"><i class="fas fa-graduation-cap" style="margin-right:6px;"></i> Free Batches for Every Student</p>
+            <p style="font-size:12.5px; color:#ffffff;">Thousands of students across India cannot afford paid coaching. Santosh provides them complete free batches — the same content that others pay hundreds for.</p>
+        </div>
+
+        <div class="dev-info-panel" style="margin-top:12px;">
+            <p style="font-size:14px; font-weight:800; color:#2ecc71; margin-bottom:8px;"><i class="fas fa-book-open" style="margin-right:6px;"></i> Free Study Material & Lectures</p>
+            <p style="font-size:12.5px; color:#ffffff;">From PDFs and notes to full video lectures — all free, all organized, all accessible on any device. No paywall, no login wall, just learning.</p>
+        </div>
+
+        <div class="dev-info-panel" style="margin-top:12px;">
+            <p style="font-size:14px; font-weight:800; color:#ff4d6d; margin-bottom:8px;"><i class="fas fa-hands-holding-child" style="margin-right:6px;"></i> Helping Students Who Need It Most</p>
+            <p style="font-size:12.5px; color:#ffffff;">The mission is simple: no student should be left behind just because they cannot pay. Santosh built ROZGAR WITH ANKITto bridge that gap — for free, forever.</p>
+        </div>
+
+        <div class="dev-info-panel" style="margin-top:12px;">
+            <p style="font-size:14px; font-weight:800; color:#bf5af2; margin-bottom:8px;"><i class="fas fa-laptop-code" style="margin-right:6px;"></i> Building Free Apps & Websites</p>
+            <p style="font-size:12.5px; color:#ffffff;">Santosh codes and ships free tools, websites and apps — shared daily on WhatsApp and Telegram — so students always have what they need, at zero cost.</p>
+        </div>
+
+        <div class="dev-section-heading"><i class="fas fa-code"></i> WHAT SANTOSH BUILDS <span></span></div>
+        
+        <div class="dev-row-card">
+            <div class="dev-row-left">
+                <div class="dev-row-icon icon-rwa"><i class="fas fa-tv"></i></div>
+                <div class="dev-row-text">
+                    <h4>Rawat Academy Content <span class="dev-live-badge">LIVE</span></h4>
+                    <p>A complete platform with 4700+ free batches for competitive exam aspirants.</p>
+                </div>
+            </div>
+            <i class="fas fa-external-link-alt" style="font-size:12px; color:#00e5ff;"></i>
+        </div>
+
+        <div class="dev-row-card">
+            <div class="dev-row-left">
+                <div class="dev-row-icon icon-secure"><i class="fas fa-lock"></i></div>
+                <div class="dev-row-text">
+                    <h4>Secure Video Streaming Engine</h4>
+                    <p>DRM-level encrypted HLS streaming — so free content stays free and safe.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dev-row-card">
+            <div class="dev-row-left">
+                <div class="dev-row-icon icon-tools"><i class="fas fa-cubes"></i></div>
+                <div class="dev-row-text">
+                    <h4>Free Apps & Daily Tools <span class="dev-live-badge">LIVE</span></h4>
+                    <p>Builds and shares free utility apps and websites daily for students.</p>
+                </div>
+            </div>
+            <i class="fas fa-external-link-alt" style="font-size:12px; color:#00e5ff;"></i>
+        </div>
+
+        <div class="dev-section-heading"><i class="fas fa-share-nodes"></i> FIND SANTOSH RAWAT ONLINE <span></span></div>
+
+        <a href="#" class="dev-row-card">
+            <div class="dev-row-left">
+                <div class="dev-row-icon icon-yt"><i class="fab fa-youtube"></i></div>
+                <div class="dev-row-text">
+                    <h4>YouTube</h4>
+                    <p>Watch free lectures, tutorials & tech videos</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="dev-row-card">
+            <div class="dev-row-left">
+                <div class="dev-row-icon icon-insta"><i class="fab fa-instagram"></i></div>
+                <div class="dev-row-text">
+                    <h4>Instagram</h4>
+                    <p>Dev life, behind-the-scenes & updates</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://t.me/RAWAT_ACADEMY_HUB" target="_blank" class="dev-row-card">
+            <div class="dev-row-left">
+                <div class="dev-row-icon icon-secure-brand"><i class="fab fa-telegram-plane"></i></div>
+                <div class="dev-row-text">
+                    <h4>Telegram Channel</h4>
+                    <p>Free resources, study material & instant updates</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://whatsapp.com/channel/0029Vb7zTcuJ93wQVoVEw21K" target="_blank" class="dev-row-card">
+            <div class="dev-row-left">
+                <div class="dev-row-icon icon-wa-brand"><i class="fab fa-whatsapp"></i></div>
+                <div class="dev-row-text">
+                    <h4>WhatsApp Channel</h4>
+                    <p>Daily free apps, websites & tools — join now</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="dev-row-card">
+            <div class="dev-row-left">
+                <div class="dev-row-icon icon-portal"><i class="fas fa-globe"></i></div>
+                <div class="dev-row-text">
+                    <h4>Rawat Academy Portal</h4>
+                    <p>4700+ free education batches — start learning today</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="https://whatsapp.com/channel/0029Vb7zTcuJ93wQVoVEw21K" target="_blank" class="dev-wa-sticky-btn" style="background: linear-gradient(90deg, #128c7e, #075e54);">
+            <div style="display:flex; align-items:center; justify-content: space-between; width: 100%;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i class="fab fa-whatsapp" style="font-size:20px;"></i>
+                    <div style="text-align:left;">
+                        <p style="font-size:13px; font-weight:800; margin:0;">Join Free WhatsApp Channel</p>
+                        <p style="font-size:10px; color:#bbf7d0; font-weight:600; margin:0;">Get free apps, websites & study tools daily 🔥</p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right" style="font-size:12px;"></i>
+            </div>
+        </a>
+
+        <div class="dev-section-heading">TECH STACK <span></span></div>
+        <div class="dev-tech-grid">
+            <div class="dev-tech-tag">Next.js</div>
+            <div class="dev-tech-tag">React</div>
+            <div class="dev-tech-tag">TypeScript</div>
+            <div class="dev-tech-tag">Node.js</div>
+            <div class="dev-tech-tag">Tailwind CSS</div>
+            <div class="dev-tech-tag">MongoDB</div>
+            <div class="dev-tech-tag">Firebase</div>
+            <div class="dev-tech-tag">HLS.js</div>
+            <div class="dev-tech-tag">JWT</div>
+            <div class="dev-tech-tag">Vercel</div>
+        </div>
+
+        <div class="dev-footer-credits">
+            <div class="dev-footer-links">
+                <span>Rawat Academy</span> • <span>YouTube</span> • <span>Instagram</span> • <span>Telegram</span>
+            </div>
+            <p style="color: #ffffff; opacity:0.7;">© 2026 ROZGAR WITH ANKIT• BUILT WITH ❤️ BY SANTOSH RAWAT</p>
+        </div>
+    </div>
+
+    <div class="bottom-navbar">
+        <div class="nav-tab active-tab" id="nav-home" onclick="showPage('home')">
+            <i class="fas fa-home"></i>
+            <span>HOME</span>
+        </div>
+        <div class="nav-tab" id="nav-saved" onclick="showPage('saved')">
+            <i class="fas fa-bookmark"></i>
+            <span>SAVED</span>
+        </div>
+        <div class="nav-tab" id="nav-join" onclick="showPage('join')">
+            <i class="fab fa-telegram-plane"></i>
+            <span>JOIN</span>
+        </div>
+        <div class="nav-tab" id="nav-profile" onclick="showPage('developer')">
+            <i class="fas fa-user"></i>
+            <span>PROFILE</span>
+        </div>
     </div>
 
     <script>
-        // ========================================
-        // LALIT BHAI (SPIDY UNIVERSE) SE DATA FETCH
-        // ========================================
-        const LALIT_SITE = 'https://spidyuniverserwa.vercel.app/';
-        let allBatches = [];
+        // ==========================================
+        // LALIT BHAI (SPIDY UNIVERSE) SE BATCHES FETCH KARNE KA ENGINE
+        // ==========================================
 
+        // ⭐ YAHAN PAR LALIT BHAI KA REAL API URL DAALO
+        // Agar API nahi milti toh HTML Scraper use karo (neeche comment kiya hai)
+        const LALIT_API_URL = 'https://spidyuniverserwa.vercel.app/';  // <-- YE BADAL SAKTE HO
+
+        // ==========================================
+        // 1. FETCH FUNCTION - LALIT BHAI SE DATA LEKAR AAYEGA
+        // ==========================================
         async function fetchLalitBatches() {
-            const list = document.getElementById('batchList');
-            list.innerHTML = '<div style="text-align:center; padding:50px;">⏳ Loading 577+ batches...</div>';
-
             try {
-                // 1. HTML fetch karo
-                const response = await fetch(LALIT_SITE);
-                const html = await response.text();
+                console.log('🔄 Lalit se data fetch ho raha hai...');
+                
+                // Pehle API try karo
+                let data = null;
+                let apiSuccess = false;
 
-                // 2. HTML se data extract karo (temporary div banake)
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;
-
-                // 3. 🔥 YAHAN SE BATCHES NIKALO (Class names adjust karo)
-                // Pehle saare links dekho jo "batch" ya "course" se related ho
-                const allLinks = tempDiv.querySelectorAll('a[href*="batch"], a[href*="course"], a[href*="video"], a[href*="class"]');
-                const batchElements = tempDiv.querySelectorAll('.batch-card, .course-card, .item, .card, .product');
-
-                // 4. Data array banayein
-                const batches = [];
-
-                // Pehle .batch-card jaisi classes try karo
-                batchElements.forEach(el => {
-                    const titleEl = el.querySelector('h3, h4, .title, .name, .heading');
-                    const linkEl = el.querySelector('a');
-                    const imgEl = el.querySelector('img');
-
-                    const title = titleEl ? titleEl.innerText.trim() : (linkEl ? linkEl.innerText.trim() : 'Batch');
-                    const link = linkEl ? linkEl.href : '#';
-                    const img = imgEl ? imgEl.src : 'https://i.postimg.cc/BQKSrcr2/logo.png';
-
-                    if (title && title.length > 2) {
-                        batches.push({ title, link, img });
+                // Agar API URL set hai toh try karo
+                if (LALIT_API_URL && LALIT_API_URL !== 'https://spidyuniverserwa.vercel.app/') {
+                    try {
+                        const response = await fetch(LALIT_API_URL);
+                        if (response.ok) {
+                            data = await response.json();
+                            apiSuccess = true;
+                            console.log('✅ API se data mil gaya:', data);
+                        }
+                    } catch (apiError) {
+                        console.warn('⚠️ API fetch fail, HTML scraper try kar rahe hain:', apiError);
                     }
+                }
+
+                // Agar API fail ho toh HTML scraper use karo
+                if (!apiSuccess || !data) {
+                    console.log('🔄 HTML scraper chal raha hai...');
+                    data = await fetchLalitBatchesViaHTML();
+                }
+
+                // Data render karo
+                if (data && data.length > 0) {
+                    renderBatchesFromLalit(data);
+                } else {
+                    console.warn('⚠️ Koi data nahi mila. Static data dikha raha hoon.');
+                    loadStaticBatches();
+                }
+
+            } catch (error) {
+                console.error('❌ Lalit se data fetch karte waqt error:', error);
+                loadStaticBatches();
+            }
+        }
+
+        // ==========================================
+        // 2. HTML SCRAPER - LALIT KI SITE SE DATA NIKALE
+        // ==========================================
+        async function fetchLalitBatchesViaHTML() {
+            try {
+                const response = await fetch('https://spidyuniverserwa.vercel.app/');
+                const html = await response.text();
+                
+                // HTML ko parse karo
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Ab yahan se batches ke elements dhundho
+                // 👇 YAHAN CLASS NAMES BADALNE PAD SAKTE HAIN
+                const batchElements = doc.querySelectorAll('.batch-card, .course-item, .batch-item, .card, .product-card, .item');
+                
+                const batches = [];
+                batchElements.forEach((el, index) => {
+                    // Title dhundho
+                    const titleEl = el.querySelector('.title, .batch-title, .course-name, .name, h3, h4, .heading');
+                    const title = titleEl ? titleEl.innerText.trim() : `Batch ${index + 1}`;
+                    
+                    // Link dhundho
+                    const linkEl = el.querySelector('a');
+                    let link = linkEl ? linkEl.href : '#';
+                    
+                    // Thumbnail dhundho
+                    const imgEl = el.querySelector('img');
+                    const thumbnail = imgEl ? imgEl.src : 'https://i.postimg.cc/BQKSrcr2/logo.png';
+                    
+                    // Category/Subject dhundho
+                    const catEl = el.querySelector('.category, .subject, .type, .badge, .tag');
+                    const category = catEl ? catEl.innerText.trim() : 'Free Batch';
+                    
+                    batches.push({
+                        title: title,
+                        videoUrl: link,
+                        thumbnail: thumbnail,
+                        category: category,
+                        lectures: '0'
+                    });
                 });
 
-                // Agar kuch na mile toh saare links se try karo
+                // Agar kuch nahi mila toh fallback
                 if (batches.length === 0) {
-                    allLinks.forEach(link => {
-                        const title = link.innerText.trim() || link.href.split('/').pop() || 'Batch';
-                        if (title.length > 2 && link.href.startsWith('http')) {
-                            batches.push({
-                                title: title,
-                                link: link.href,
-                                img: 'https://i.postimg.cc/BQKSrcr2/logo.png'
-                            });
-                        }
+                    // Try alternate: Saare links dhundho
+                    const allLinks = doc.querySelectorAll('a[href*="batch"], a[href*="course"], a[href*="video"]');
+                    allLinks.forEach((link, index) => {
+                        batches.push({
+                            title: link.innerText.trim() || `Batch ${index + 1}`,
+                            videoUrl: link.href,
+                            thumbnail: 'https://i.postimg.cc/BQKSrcr2/logo.png',
+                            category: 'Free Batch',
+                            lectures: '0'
+                        });
                     });
                 }
 
-                // Agar abhi bhi kuch nahi mila toh fake data test ke liye
-                if (batches.length === 0) {
-                    // Fallback: 10 sample batches
-                    for (let i = 1; i <= 10; i++) {
-                        batches.push({
-                            title: `Test Batch ${i}`,
-                            link: `#batch-${i}`,
-                            img: 'https://i.postimg.cc/BQKSrcr2/logo.png'
-                        });
-                    }
-                }
-
-                allBatches = batches;
-                document.getElementById('batchCount').innerText = batches.length;
-                renderBatches(batches);
+                console.log(`✅ HTML scraper se ${batches.length} batches mile!`);
+                return batches;
 
             } catch (error) {
-                console.error('Error:', error);
-                list.innerHTML = `
-                    <div class="error">
-                        ⚠️ Error loading batches: ${error.message}<br>
-                        <button onclick="fetchLalitBatches()" style="margin-top:20px; background:#238636; border:none; padding:10px 20px; color:#fff; border-radius:8px; cursor:pointer;">
-                            Retry
-                        </button>
-                    </div>
-                `;
+                console.error('❌ HTML scraper error:', error);
+                return [];
             }
         }
 
-        function renderBatches(batches) {
-            const list = document.getElementById('batchList');
-            list.innerHTML = '';
-
-            if (!batches || batches.length === 0) {
-                list.innerHTML = '<div class="error">😕 No batches found.</div>';
+        // ==========================================
+        // 3. RENDER FUNCTION - BATCHES KO WEBSITE PAR DIKHAYEGA
+        // ==========================================
+        function renderBatchesFromLalit(batches) {
+            const container = document.getElementById('platform-list');
+            if (!container) {
+                console.error('❌ platform-list element nahi mila!');
                 return;
             }
 
+            container.innerHTML = ''; // Purana data hatao
+
+            if (!batches || batches.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-placeholder">
+                        <i class="fas fa-box-open"></i>
+                        <h3>Koi batches nahi mile</h3>
+                        <p>Lalit bhai ke server se data nahi aaya. Thodi der baad try karo.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Har batch ke liye card banayein
             batches.forEach((batch, index) => {
                 const card = document.createElement('div');
                 card.className = 'batch-card';
-                card.style.display = 'flex';
-                card.style.alignItems = 'center';
-                card.style.gap = '15px';
+                
+                // Data ke keys tumhare hisaab se adjust karo
+                const title = batch.title || batch.name || batch.course_name || `Batch ${index + 1}`;
+                const category = batch.category || batch.subject || batch.type || 'Free Batch';
+                const lectures = batch.lectures || batch.videos || batch.lessons || '0';
+                const thumbnail = batch.thumbnail || batch.image || batch.poster || 'https://i.postimg.cc/BQKSrcr2/logo.png';
+                
+                // Video link
+                let videoUrl = batch.videoUrl || batch.video || batch.link || batch.url || '#';
+                
+                // Agar videoUrl relative hai toh absolute banao
+                if (videoUrl.startsWith('/')) {
+                    videoUrl = `https://spidyuniverserwa.vercel.app${videoUrl}`;
+                }
 
                 card.innerHTML = `
-                    <img src="${batch.img}" style="width:50px; height:50px; border-radius:8px; object-fit:cover; background:#fff; padding:2px;" 
-                         onerror="this.src='https://i.postimg.cc/BQKSrcr2/logo.png'">
-                    <div style="flex:1;">
-                        <div class="batch-title">${batch.title}</div>
-                        <div class="batch-meta">
-                            Free Batch <span class="free-tag">🔓 FREE</span>
-                            <span class="count-badge">#${index + 1}</span>
+                    <div class="batch-left">
+                        <img src="${thumbnail}" class="batch-img" 
+                             onerror="this.src='https://i.postimg.cc/BQKSrcr2/logo.png'">
+                        <div class="batch-content">
+                            <h3>${title}</h3>
+                            <div style="font-size:11px; color:var(--text-dim);">
+                                ${category} • ${lectures} Lectures 
+                                <span style="color: #22c55e; margin-left: 8px;">🔓 FREE</span>
+                            </div>
                         </div>
                     </div>
-                    <a href="${batch.link}" target="_blank" style="color:#00e5ff; font-size:20px; text-decoration:none;">→</a>
+                    <a href="${videoUrl}" target="_blank" class="link-icon">
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
                 `;
-                list.appendChild(card);
+                container.appendChild(card);
             });
+
+            // Search bar ka placeholder update karo
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.placeholder = `🔍 ${batches.length} batches mein search karo...`;
+            }
         }
 
-        function filterBatches() {
-            const query = document.getElementById('search').value.toLowerCase();
-            const cards = document.querySelectorAll('#batchList .batch-card');
+        // ==========================================
+        // 4. STATIC FALLBACK DATA (TUMHARA PURANA DATA)
+        // ==========================================
+        function loadStaticBatches() {
+            const staticData = [
+                { 
+                    title: "Maths Foundation", 
+                    category: "Mathematics", 
+                    lectures: 45, 
+                    thumbnail: "https://i.postimg.cc/BQKSrcr2/logo.png",
+                    videoUrl: "#"
+                },
+                { 
+                    title: "Science Special", 
+                    category: "Science", 
+                    lectures: 38, 
+                    thumbnail: "https://i.postimg.cc/BQKSrcr2/logo.png",
+                    videoUrl: "#"
+                }
+            ];
+            renderBatchesFromLalit(staticData);
+        }
+
+        // ==========================================
+        // 5. ORIGINAL FUNCTIONS (TUMHARE PURANE CODES)
+        // ==========================================
+        let seconds = 0; let studyMins = 0; let lecs = 0;
+        let currentPage = 'home';
+
+        function initSystem() {
+            const hour = new Date().getHours();
+            if (hour >= 6 && hour < 18) {
+                document.body.classList.add('light-theme');
+                document.getElementById('theme-icon').className = "fas fa-sun";
+            }
+            startClock();
+
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.classList.add('fade-out');
+            }, 3000);
+
+            window.history.pushState({page: 'home'}, 'Home', '');
+            
+            // ⭐ MAIN CHANGE: Lalit se batches fetch karo
+            fetchLalitBatches();
+            
+            // Auto-refresh har 5 minute mein
+            setInterval(fetchLalitBatches, 300000);
+        }
+
+        window.addEventListener('popstate', function(event) {
+            if (currentPage !== 'home') {
+                showPage('home', false); 
+                window.history.pushState({page: 'home'}, 'Home', '');
+            } else {
+                window.history.back();
+            }
+        });
+
+        function toggleTheme(event) {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const isLight = body.classList.contains('light-theme');
+            
+            if (isLight) {
+                body.classList.remove('light-theme');
+                themeIcon.className = "fas fa-moon";
+            } else {
+                body.classList.add('light-theme');
+                themeIcon.className = "fas fa-sun";
+            }
+            body.animate([{ opacity: '0.85' }, { opacity: '1' }], { duration: 250, easing: 'ease-in-out' });
+        }
+
+        function startClock() {
+            setInterval(() => {
+                seconds++;
+                let h = Math.floor(seconds / 3600);
+                let m = Math.floor((seconds % 3600) / 60);
+                let s = seconds % 60;
+                document.getElementById('timer-text').innerText = `${h}h ${m < 10 ? '0'+m : m}m`;
+                document.getElementById('timer-display').innerText = `${h}h ${m}m ${s}s`;
+                if(seconds % 60 === 0) { studyMins++; document.getElementById('study-display').innerText = `0h ${studyMins}m`; }
+                if(seconds % 300 === 0) { lecs++; document.getElementById('lecs-display').innerText = `${lecs} Lecs`; }
+            }, 1000);
+        }
+
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+        }
+
+        function showPage(page, pushHistory = true) {
+            currentPage = page;
+            
+            if (pushHistory) {
+                window.history.pushState({page: page}, page, '');
+            }
+
+            document.getElementById('detail-page').style.display = 'none';
+            document.getElementById('home-page').style.display = 'none';
+            document.getElementById('saved-page').style.display = 'none';
+            document.getElementById('join-page').style.display = 'none';
+            document.getElementById('stats-page').style.display = 'none';
+            document.getElementById('dev-profile-page').style.display = 'none';
+            
+            const header = document.getElementById('main-header');
+            
+            const btnSidebarHome = document.getElementById('btn-sidebar-home');
+            const btnSidebarSaved = document.getElementById('btn-sidebar-saved');
+            const btnSidebarStats = document.getElementById('btn-sidebar-stats');
+            const btnSidebarDev = document.getElementById('btn-sidebar-dev');
+
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active-tab'));
+            document.querySelectorAll('.sidebar .menu-item').forEach(item => item.classList.remove('active'));
+
+            if(page === 'home') {
+                header.style.display = 'flex';
+                document.getElementById('home-page').style.display = 'block';
+                document.getElementById('nav-home').classList.add('active-tab');
+                if(btnSidebarHome) btnSidebarHome.classList.add('active');
+            } else if(page === 'saved') {
+                header.style.display = 'flex';
+                document.getElementById('saved-page').style.display = 'block';
+                document.getElementById('nav-saved').classList.add('active-tab');
+                if(btnSidebarSaved) btnSidebarSaved.classList.add('active');
+            } else if(page === 'join') {
+                header.style.display = 'flex';
+                document.getElementById('join-page').style.display = 'block';
+                document.getElementById('nav-join').classList.add('active-tab');
+            } else if(page === 'stats') {
+                header.style.display = 'flex';
+                document.getElementById('stats-page').style.display = 'block';
+                if(btnSidebarStats) btnSidebarStats.classList.add('active');
+            } else if(page === 'developer') {
+                header.style.display = 'none';
+                document.getElementById('dev-profile-page').style.display = 'block';
+                document.getElementById('nav-profile').classList.add('active-tab');
+                if(btnSidebarDev) btnSidebarDev.classList.add('active');
+            }
+            
+            const sidebar = document.getElementById('sidebar');
+            if(sidebar && sidebar.classList.contains('active')) {
+                toggleMenu();
+            }
+        }
+
+        function filterPlatforms() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('#platform-list .batch-card');
+            
+            if (cards.length === 0) return;
 
             cards.forEach(card => {
-                const title = card.querySelector('.batch-title')?.innerText?.toLowerCase() || '';
-                card.style.display = title.includes(query) ? 'flex' : 'none';
+                const titleHeading = card.querySelector('.batch-content h3');
+                const title = titleHeading ? titleHeading.innerText.toLowerCase() : '';
+                const dataShortAttr = card.getAttribute('data-short');
+                const shortNames = dataShortAttr ? dataShortAttr.toLowerCase() : '';
+                
+                if (title.includes(query) || shortNames.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
             });
         }
 
-        // ========================================
-        // PAGE LOAD HOTE HI FETCH SHURU KARO
-        // ========================================
-        window.onload = function() {
-            fetchLalitBatches();
-            // Auto-refresh har 5 minute mein (test ke liye)
-            setInterval(fetchLalitBatches, 300000);
-        };
+        function openDetails(title, imgUrl, downloads, rating) {
+            currentPage = 'detail';
+            window.history.pushState({page: 'detail'}, 'Detail', '');
+            
+            document.getElementById('det-title').innerText = title;
+            document.getElementById('det-img').src = imgUrl;
+            document.getElementById('det-meta').innerText = `Education • ${downloads} • ★ ${rating}`;
+            
+            document.getElementById('home-page').style.display = 'none';
+            document.getElementById('detail-page').style.display = 'block';
+        }
+
+        function closeDetails() {
+            showPage('home');
+        }
+
+        function closeDevPage() {
+            showPage('home');
+        }
+
+        console.log('🚀 Lalit Batch Engine Loaded!');
+        console.log('ℹ️ Agar batches nahi dikhte toh "view-source:https://spidyuniverserwa.vercel.app/" se HTML inspect karo');
     </script>
 </body>
 </html>
