@@ -11,22 +11,45 @@
         .light{--bg:#f0f2f5;--panel:#fff;--text:#1c1e21;--dim:#4a5568;--brd:#cbd5e1}
         body{background:radial-gradient(circle at top right,#0f1c3f,var(--bg));color:var(--text);min-height:100vh;padding-bottom:70px;transition:.3s}
         
+        /* HEADER */
         header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:rgba(13,18,34,.95);position:sticky;top:0;z-index:100;border-bottom:2px solid var(--sky)}
         .logo{font-weight:900;color:var(--sky);font-size:14px;letter-spacing:1px}
         .timer{display:flex;align-items:center;gap:6px;background:rgba(0,229,255,.1);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;color:var(--text)}
-        .dot{width:7px;height:7px;background:#22c55e;border-radius:50%;margin-right:2px}
+        .dot{width:7px;height:7px;background:#22c55e;border-radius:50%}
         
+        /* SIDEBAR */
+        .overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;z-index:900}
+        .sidebar{position:fixed;left:-100%;top:0;width:270px;height:100%;background:var(--panel);z-index:1000;transition:left .4s;padding:25px;border-right:2px solid var(--sky);display:flex;flex-direction:column}
+        .sidebar.open{left:0}
+        .sidebar .top{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+        .sidebar .top img{width:45px;height:45px;border-radius:10px;border:2px solid var(--sky)}
+        .sidebar .top h2{font-size:15px;color:var(--text)}
+        .sidebar .top small{font-size:9px;color:var(--sky);font-weight:700}
+        .menu-label{color:#4b5563;font-size:10px;font-weight:700;margin:12px 0 8px 5px;text-transform:uppercase;letter-spacing:1px}
+        .menu-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;color:var(--dim);cursor:pointer;margin-bottom:6px;border:1px solid transparent;transition:.3s}
+        .menu-item:hover,.menu-item.on{background:rgba(0,229,255,.1);color:var(--sky);border-color:rgba(0,229,255,.2)}
+        .sidebar .bottom{margin-top:auto;padding-top:20px;border-top:1px solid var(--brd);text-align:center}
+        .sidebar .bottom p{font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+        
+        /* SEARCH */
         .search{padding:14px 16px 8px}
         .search div{display:flex;align-items:center;background:var(--panel);border:1px solid var(--brd);padding:10px 14px;border-radius:12px;gap:10px}
         .search input{background:0 0;border:none;outline:none;color:var(--text);width:100%;font-size:13px;font-weight:600}
         .search input::placeholder{color:var(--dim)}
         .search i{color:var(--sky);font-size:14px}
         
+        /* TAGS */
         .tags{display:flex;gap:6px;overflow-x:auto;padding:6px 16px 10px;scrollbar-width:none}
         .tags::-webkit-scrollbar{display:none}
         .tag{padding:5px 12px;border-radius:16px;font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer;background:var(--panel);border:1px solid var(--brd);color:var(--dim);flex-shrink:0;transition:.2s}
         .tag.on{background:var(--sky);color:#050810;border-color:var(--sky)}
         
+        /* PAGE CONTAINER */
+        .page{display:none;animation:fade .3s}
+        .page.active{display:block}
+        @keyframes fade{from{opacity:0}to{opacity:1}}
+        
+        /* BATCH LIST */
         .list{padding:0 16px 16px;display:flex;flex-direction:column;gap:10px}
         .card{background:var(--panel);border-radius:12px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--brd);cursor:pointer;transition:.2s;gap:10px}
         .card:active{transform:scale(.98)}
@@ -37,44 +60,131 @@
         .card i{color:var(--dim);font-size:12px;flex-shrink:0}
         .more{justify-content:center!important;border:1px dashed var(--sky)!important;color:var(--sky)!important;font-weight:700!important;font-size:13px!important}
         
+        /* STATS PAGE */
+        .stats{padding:20px 16px}
+        .stats .rank{background:var(--panel);border-radius:16px;padding:18px;display:flex;align-items:center;gap:18px;border:1px solid var(--brd);margin-bottom:18px}
+        .stats .rank h1{font-size:28px;font-weight:900;color:var(--text)}
+        .stats .rank p{font-size:11px;color:var(--dim);font-weight:600}
+        .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .stats-grid div{background:var(--panel);padding:14px;border-radius:12px;border:1px solid var(--brd)}
+        .stats-grid div h3{font-size:18px;color:var(--text);margin-top:4px}
+        .stats-grid div p{font-size:9px;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+        
+        /* EMPTY PAGE */
+        .empty{text-align:center;padding:50px 20px;color:var(--dim)}
+        .empty i{font-size:36px;color:var(--sky);margin-bottom:12px;opacity:.7}
+        .empty h3{font-size:15px;color:var(--text);margin-bottom:4px}
+        .empty p{font-size:12px;opacity:.7}
+        
+        /* FOOTER SIGN */
+        .sign{text-align:center;padding:20px;font-size:10px;color:var(--dim);font-weight:600;letter-spacing:.5px}
+        .sign b{color:var(--gold)}
+        
+        /* BOTTOM NAV */
         .nav{position:fixed;bottom:0;left:0;width:100%;background:#090e1a;border-top:1px solid #1e2d54;display:flex;z-index:999;padding:8px 0 6px}
         .light .nav{background:#fff;border-color:#cbd5e1}
-        .nav div{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9ca3af;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:.3px}
+        .nav div{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9ca3af;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:.3px;transition:.2s}
         .nav i{font-size:17px}
         .nav .on{color:var(--sky)}
-
-        .sign{text-align:center;padding:20px;font-size:10px;color:var(--dim);font-weight:600;letter-spacing:.5px}
     </style>
 </head>
 <body>
 
-<header id="head">
-    <i class="fas fa-bars" style="font-size:20px;color:var(--sky);cursor:pointer"></i>
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+    <div class="top">
+        <img src="https://i.postimg.cc/BQKSrcr2/logo.png" alt="">
+        <div>
+            <h2>RAWAT•ACADEMY</h2>
+            <small>SANTOSH♡RAWAT</small>
+        </div>
+    </div>
+    <div class="menu-label">Main Menu</div>
+    <div class="menu-item on" onclick="showPage('home')"><i class="fas fa-home"></i> Home</div>
+    <div class="menu-item" onclick="showPage('saved')"><i class="fas fa-bookmark"></i> Saved Batches</div>
+    <div class="menu-item" onclick="showPage('stats')"><i class="fas fa-chart-line"></i> My Stats</div>
+    <div class="menu-label">Community</div>
+    <div class="menu-item" onclick="window.open('https://whatsapp.com/channel/0029Vb7zTcuJ93wQVoVEw21K')"><i class="fab fa-whatsapp" style="color:#25d366"></i> Join WhatsApp</div>
+    <div class="menu-item" onclick="window.open('https://t.me/RAWAT_ACADEMY_HUB')"><i class="fab fa-telegram" style="color:#24a1de"></i> Join Telegram</div>
+    <div class="menu-label">System</div>
+    <div class="menu-item" onclick="showPage('profile')"><i class="fas fa-user-ninja"></i> Developer Profile</div>
+    <div class="bottom">
+        <p>RAWAT ACADEMY • SANTOSH RAWAT</p>
+    </div>
+</div>
+
+<!-- HEADER -->
+<header>
+    <i class="fas fa-bars" style="font-size:20px;color:var(--sky);cursor:pointer" onclick="toggleMenu()"></i>
     <div class="logo">ROZGAR WITH ANKIT</div>
     <div class="timer"><div class="dot"></div><span id="tmr">0h 00m</span></div>
 </header>
 
-<div class="search">
-    <div>
-        <i class="fas fa-search"></i>
-        <input id="search" placeholder="Search batch..." oninput="searchBatch()">
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+    <div class="search">
+        <div>
+            <i class="fas fa-search"></i>
+            <input id="search" placeholder="Search batch..." oninput="searchBatch()">
+        </div>
+    </div>
+    <div class="tags" id="tags"></div>
+    <div class="list" id="list"></div>
+    <div class="sign">— <b>Santosh Rawat</b> —</div>
+</div>
+
+<!-- SAVED PAGE -->
+<div id="page-saved" class="page">
+    <div class="empty">
+        <i class="fas fa-bookmark"></i>
+        <h3>Saved Batches</h3>
+        <p>No batches saved yet.</p>
     </div>
 </div>
 
-<div class="tags" id="tags"></div>
+<!-- STATS PAGE -->
+<div id="page-stats" class="page">
+    <div class="stats">
+        <div class="rank">
+            <div style="width:55px;height:55px;background:#111827;border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-chess-pawn" style="font-size:26px;color:#9ca3af"></i></div>
+            <div>
+                <p>CURRENT RANK</p>
+                <h1>NOOB</h1>
+                <p>Level 0.0 • 10% Efficiency</p>
+            </div>
+        </div>
+        <div class="stats-grid">
+            <div><i class="fas fa-clock" style="color:#6366f1"></i><p>App Time</p><h3 id="app-timer">0h 0m 0s</h3></div>
+            <div><i class="fas fa-book" style="color:#22c55e"></i><p>Study Time</p><h3 id="study-timer">0h 0m</h3></div>
+            <div><i class="fas fa-fire" style="color:#f97316"></i><p>Streak</p><h3>1 Day</h3></div>
+            <div><i class="fas fa-check" style="color:#ef4444"></i><p>Completed</p><h3 id="lec-count">0 Lecs</h3></div>
+        </div>
+    </div>
+</div>
 
-<div class="list" id="list"></div>
+<!-- PROFILE PAGE -->
+<div id="page-profile" class="page">
+    <div class="empty">
+        <i class="fas fa-user-ninja"></i>
+        <h3>Santosh Rawat</h3>
+        <p>Full Stack Developer</p>
+        <p style="margin-top:15px;font-size:11px;">Profile page coming soon...</p>
+    </div>
+</div>
 
-<div class="sign">— Santosh Rawat —</div>
-
+<!-- BOTTOM NAV -->
 <div class="nav">
-    <div class="on"><i class="fas fa-home"></i>HOME</div>
-    <div><i class="fas fa-bookmark"></i>SAVED</div>
-    <div><i class="fab fa-telegram"></i>JOIN</div>
-    <div><i class="fas fa-user"></i>PROFILE</div>
+    <div class="on" id="nav-home" onclick="showPage('home')"><i class="fas fa-home"></i>HOME</div>
+    <div id="nav-saved" onclick="showPage('saved')"><i class="fas fa-bookmark"></i>SAVED</div>
+    <div id="nav-stats" onclick="showPage('stats')"><i class="fas fa-chart-line"></i>STATS</div>
+    <div id="nav-profile" onclick="showPage('profile')"><i class="fas fa-user"></i>PROFILE</div>
 </div>
 
 <script>
+// ============ RWA BATCH DATA ============
 const DATA = [
   {id:582,t:"UP Police Constable - खाकी Again बैच",p:"₹799",g:"UP Police"},
   {id:581,t:"UPSI भर्ती - थानेदार बैच",p:"₹899",g:"UP Police"},
@@ -169,14 +279,34 @@ const DATA = [
 ];
 
 const IMG = "https://appx-content-v2.classx.co.in/paid_course3/2026-06-30-0.7503537082274693.jpeg";
-let loaded = 0, filter = "All";
+let loaded = 0, filter = "All", currentPage = "home";
 
-function init(){
-  buildTags();
-  render();
-  clock();
+// ============ SIDEBAR ============
+function toggleMenu(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').style.display = 
+    document.getElementById('sidebar').classList.contains('open') ? 'block' : 'none';
 }
 
+// ============ PAGE SWITCHING ============
+function showPage(page){
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  // Show selected page
+  document.getElementById('page-'+page).classList.add('active');
+  // Update nav tabs
+  document.querySelectorAll('.nav div').forEach(n=>n.classList.remove('on'));
+  document.getElementById('nav-'+page).classList.add('on');
+  // Update sidebar items
+  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('on'));
+  
+  // Close sidebar
+  toggleMenu();
+  
+  currentPage = page;
+}
+
+// ============ BATCH RENDER ============
 function buildTags(){
   const tags = ["All","SSC","Teaching","School","NDA/CDS","Army","Airforce","Navy","CAPF/BSF","UP Police","Delhi Police","Railway","Banking","UPSSSC","NEET/JEE","Other"];
   const el = document.getElementById('tags');
@@ -237,17 +367,25 @@ function searchBatch(){
   });
 }
 
-let sec = 0;
+// ============ CLOCK ============
+let sec = 0, mins = 0, lecs = 0;
 function clock(){
   setInterval(()=>{
     sec++;
     let h = Math.floor(sec/3600);
     let m = Math.floor((sec%3600)/60);
+    let s = sec%60;
     document.getElementById('tmr').textContent = h+"h "+(m<10?"0":"")+m+"m";
+    document.getElementById('app-timer').textContent = h+"h "+m+"m "+s+"s";
+    if(sec%60==0){mins++;document.getElementById('study-timer').textContent="0h "+mins+"m"}
+    if(sec%300==0){lecs++;document.getElementById('lec-count').textContent=lecs+" Lecs"}
   },1000);
 }
 
-init();
+// ============ INIT ============
+buildTags();
+render();
+clock();
 </script>
 </body>
 </html>
