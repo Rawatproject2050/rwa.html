@@ -1,391 +1,358 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROZGAR WITH ANKIT</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-        :root{--bg:#050810;--panel:#0d1527;--sky:#00e5ff;--gold:#ffab00;--text:#fff;--dim:#e2e8f0;--brd:#223354}
-        .light{--bg:#f0f2f5;--panel:#fff;--text:#1c1e21;--dim:#4a5568;--brd:#cbd5e1}
-        body{background:radial-gradient(circle at top right,#0f1c3f,var(--bg));color:var(--text);min-height:100vh;padding-bottom:70px;transition:.3s}
-        
-        /* HEADER */
-        header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:rgba(13,18,34,.95);position:sticky;top:0;z-index:100;border-bottom:2px solid var(--sky)}
-        .logo{font-weight:900;color:var(--sky);font-size:14px;letter-spacing:1px}
-        .timer{display:flex;align-items:center;gap:6px;background:rgba(0,229,255,.1);padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;color:var(--text)}
-        .dot{width:7px;height:7px;background:#22c55e;border-radius:50%}
-        
-        /* SIDEBAR */
-        .overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;z-index:900}
-        .sidebar{position:fixed;left:-100%;top:0;width:270px;height:100%;background:var(--panel);z-index:1000;transition:left .4s;padding:25px;border-right:2px solid var(--sky);display:flex;flex-direction:column}
-        .sidebar.open{left:0}
-        .sidebar .top{display:flex;align-items:center;gap:12px;margin-bottom:15px}
-        .sidebar .top img{width:45px;height:45px;border-radius:10px;border:2px solid var(--sky)}
-        .sidebar .top h2{font-size:15px;color:var(--text)}
-        .sidebar .top small{font-size:9px;color:var(--sky);font-weight:700}
-        .menu-label{color:#4b5563;font-size:10px;font-weight:700;margin:12px 0 8px 5px;text-transform:uppercase;letter-spacing:1px}
-        .menu-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;color:var(--dim);cursor:pointer;margin-bottom:6px;border:1px solid transparent;transition:.3s}
-        .menu-item:hover,.menu-item.on{background:rgba(0,229,255,.1);color:var(--sky);border-color:rgba(0,229,255,.2)}
-        .sidebar .bottom{margin-top:auto;padding-top:20px;border-top:1px solid var(--brd);text-align:center}
-        .sidebar .bottom p{font-size:8px;color:#4b5563;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-        
-        /* SEARCH */
-        .search{padding:14px 16px 8px}
-        .search div{display:flex;align-items:center;background:var(--panel);border:1px solid var(--brd);padding:10px 14px;border-radius:12px;gap:10px}
-        .search input{background:0 0;border:none;outline:none;color:var(--text);width:100%;font-size:13px;font-weight:600}
-        .search input::placeholder{color:var(--dim)}
-        .search i{color:var(--sky);font-size:14px}
-        
-        /* TAGS */
-        .tags{display:flex;gap:6px;overflow-x:auto;padding:6px 16px 10px;scrollbar-width:none}
-        .tags::-webkit-scrollbar{display:none}
-        .tag{padding:5px 12px;border-radius:16px;font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer;background:var(--panel);border:1px solid var(--brd);color:var(--dim);flex-shrink:0;transition:.2s}
-        .tag.on{background:var(--sky);color:#050810;border-color:var(--sky)}
-        
-        /* PAGE CONTAINER */
-        .page{display:none;animation:fade .3s}
-        .page.active{display:block}
-        @keyframes fade{from{opacity:0}to{opacity:1}}
-        
-        /* BATCH LIST */
-        .list{padding:0 16px 16px;display:flex;flex-direction:column;gap:10px}
-        .card{background:var(--panel);border-radius:12px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--brd);cursor:pointer;transition:.2s;gap:10px}
-        .card:active{transform:scale(.98)}
-        .card .left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
-        .card img{width:40px;height:40px;object-fit:contain;border-radius:8px;background:#fff;padding:2px;flex-shrink:0}
-        .card .info h3{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
-        .card .info span{font-size:10px;color:var(--gold);font-weight:700}
-        .card i{color:var(--dim);font-size:12px;flex-shrink:0}
-        .more{justify-content:center!important;border:1px dashed var(--sky)!important;color:var(--sky)!important;font-weight:700!important;font-size:13px!important}
-        
-        /* STATS PAGE */
-        .stats{padding:20px 16px}
-        .stats .rank{background:var(--panel);border-radius:16px;padding:18px;display:flex;align-items:center;gap:18px;border:1px solid var(--brd);margin-bottom:18px}
-        .stats .rank h1{font-size:28px;font-weight:900;color:var(--text)}
-        .stats .rank p{font-size:11px;color:var(--dim);font-weight:600}
-        .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-        .stats-grid div{background:var(--panel);padding:14px;border-radius:12px;border:1px solid var(--brd)}
-        .stats-grid div h3{font-size:18px;color:var(--text);margin-top:4px}
-        .stats-grid div p{font-size:9px;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-        
-        /* EMPTY PAGE */
-        .empty{text-align:center;padding:50px 20px;color:var(--dim)}
-        .empty i{font-size:36px;color:var(--sky);margin-bottom:12px;opacity:.7}
-        .empty h3{font-size:15px;color:var(--text);margin-bottom:4px}
-        .empty p{font-size:12px;opacity:.7}
-        
-        /* FOOTER SIGN */
-        .sign{text-align:center;padding:20px;font-size:10px;color:var(--dim);font-weight:600;letter-spacing:.5px}
-        .sign b{color:var(--gold)}
-        
-        /* BOTTOM NAV */
-        .nav{position:fixed;bottom:0;left:0;width:100%;background:#090e1a;border-top:1px solid #1e2d54;display:flex;z-index:999;padding:8px 0 6px}
-        .light .nav{background:#fff;border-color:#cbd5e1}
-        .nav div{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9ca3af;cursor:pointer;font-size:9px;font-weight:700;letter-spacing:.3px;transition:.2s}
-        .nav i{font-size:17px}
-        .nav .on{color:var(--sky)}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rawat Academy Hub</title>
+<style>
+/* ===== YOUR EXISTING STYLES HERE ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+body { background: #0a0a1a; color: #fff; }
+/* ... अपने existing styles यहाँ रखें ... */
+
+/* ===== NEW: Detail Page Styles ===== */
+.detail-page { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+.detail-page.active { display: block; }
+.detail-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+.detail-header h2 { font-size: 1.3rem; color: #f0c040; }
+.back-btn { background: #2a2a4a; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
+.back-btn:hover { background: #3a3a5a; }
+.subjects-grid, .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.subject-card, .topic-card { background: #1a1a3a; border-radius: 12px; padding: 15px; cursor: pointer; transition: 0.2s; border: 1px solid #2a2a4a; }
+.subject-card:hover, .topic-card:hover { background: #2a2a4a; border-color: #f0c040; }
+.subject-card img, .topic-card img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
+.subject-card h4, .topic-card h4 { font-size: 0.85rem; color: #ddd; }
+.video-item { background: #1a1a3a; border-radius: 10px; padding: 12px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; border: 1px solid #2a2a4a; }
+.video-item:hover { border-color: #f0c040; }
+.video-item .play-icon { width: 40px; height: 40px; background: #f0c040; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0a0a1a; font-weight: bold; flex-shrink: 0; }
+.video-item .video-title { font-size: 0.9rem; color: #ddd; }
+.video-player-container { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; margin: 15px 0; }
+.video-player-container iframe { width: 100%; height: 100%; border: none; }
+.loading { text-align: center; padding: 40px; color: #888; }
+.section-title { font-size: 1.1rem; color: #f0c040; margin: 20px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #2a2a4a; }
+.main-page { display: block; }
+.main-page.hidden { display: none; }
+</style>
 </head>
 <body>
 
-<!-- OVERLAY -->
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-<!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-    <div class="top">
-        <img src="https://i.postimg.cc/BQKSrcr2/logo.png" alt="">
-        <div>
-            <h2>RAWAT•ACADEMY</h2>
-            <small>SANTOSH♡RAWAT</small>
-        </div>
-    </div>
-    <div class="menu-label">Main Menu</div>
-    <div class="menu-item on" onclick="showPage('home')"><i class="fas fa-home"></i> Home</div>
-    <div class="menu-item" onclick="showPage('saved')"><i class="fas fa-bookmark"></i> Saved Batches</div>
-    <div class="menu-item" onclick="showPage('stats')"><i class="fas fa-chart-line"></i> My Stats</div>
-    <div class="menu-label">Community</div>
-    <div class="menu-item" onclick="window.open('https://whatsapp.com/channel/0029Vb7zTcuJ93wQVoVEw21K')"><i class="fab fa-whatsapp" style="color:#25d366"></i> Join WhatsApp</div>
-    <div class="menu-item" onclick="window.open('https://t.me/RAWAT_ACADEMY_HUB')"><i class="fab fa-telegram" style="color:#24a1de"></i> Join Telegram</div>
-    <div class="menu-label">System</div>
-    <div class="menu-item" onclick="showPage('profile')"><i class="fas fa-user-ninja"></i> Developer Profile</div>
-    <div class="bottom">
-        <p>RAWAT ACADEMY • SANTOSH RAWAT</p>
-    </div>
+<!-- ===== MAIN PAGE (YOUR EXISTING CONTENT) ===== -->
+<div id="mainPage" class="main-page">
+  <!-- यहाँ आपका existing code रहेगा — header, sidebar, bottom nav, batch grid, etc. -->
+  <!-- ... batch cards जो पहले से हैं ... -->
+  
+  <!-- IMPORTANT: Batch cards के links को इस तरह बदलें -->
+  <!-- onclick="openCourse(event, '582')" जहाँ 582 course ID है -->
 </div>
 
-<!-- HEADER -->
-<header>
-    <i class="fas fa-bars" style="font-size:20px;color:var(--sky);cursor:pointer" onclick="toggleMenu()"></i>
-    <div class="logo">ROZGAR WITH ANKIT</div>
-    <div class="timer"><div class="dot"></div><span id="tmr">0h 00m</span></div>
-</header>
-
-<!-- HOME PAGE -->
-<div id="page-home" class="page active">
-    <div class="search">
-        <div>
-            <i class="fas fa-search"></i>
-            <input id="search" placeholder="Search batch..." oninput="searchBatch()">
-        </div>
-    </div>
-    <div class="tags" id="tags"></div>
-    <div class="list" id="list"></div>
-    <div class="sign">— <b>Santosh Rawat</b> —</div>
-</div>
-
-<!-- SAVED PAGE -->
-<div id="page-saved" class="page">
-    <div class="empty">
-        <i class="fas fa-bookmark"></i>
-        <h3>Saved Batches</h3>
-        <p>No batches saved yet.</p>
-    </div>
-</div>
-
-<!-- STATS PAGE -->
-<div id="page-stats" class="page">
-    <div class="stats">
-        <div class="rank">
-            <div style="width:55px;height:55px;background:#111827;border-radius:12px;display:flex;align-items:center;justify-content:center"><i class="fas fa-chess-pawn" style="font-size:26px;color:#9ca3af"></i></div>
-            <div>
-                <p>CURRENT RANK</p>
-                <h1>NOOB</h1>
-                <p>Level 0.0 • 10% Efficiency</p>
-            </div>
-        </div>
-        <div class="stats-grid">
-            <div><i class="fas fa-clock" style="color:#6366f1"></i><p>App Time</p><h3 id="app-timer">0h 0m 0s</h3></div>
-            <div><i class="fas fa-book" style="color:#22c55e"></i><p>Study Time</p><h3 id="study-timer">0h 0m</h3></div>
-            <div><i class="fas fa-fire" style="color:#f97316"></i><p>Streak</p><h3>1 Day</h3></div>
-            <div><i class="fas fa-check" style="color:#ef4444"></i><p>Completed</p><h3 id="lec-count">0 Lecs</h3></div>
-        </div>
-    </div>
-</div>
-
-<!-- PROFILE PAGE -->
-<div id="page-profile" class="page">
-    <div class="empty">
-        <i class="fas fa-user-ninja"></i>
-        <h3>Santosh Rawat</h3>
-        <p>Full Stack Developer</p>
-        <p style="margin-top:15px;font-size:11px;">Profile page coming soon...</p>
-    </div>
-</div>
-
-<!-- BOTTOM NAV -->
-<div class="nav">
-    <div class="on" id="nav-home" onclick="showPage('home')"><i class="fas fa-home"></i>HOME</div>
-    <div id="nav-saved" onclick="showPage('saved')"><i class="fas fa-bookmark"></i>SAVED</div>
-    <div id="nav-stats" onclick="showPage('stats')"><i class="fas fa-chart-line"></i>STATS</div>
-    <div id="nav-profile" onclick="showPage('profile')"><i class="fas fa-user"></i>PROFILE</div>
+<!-- ===== NEW: COURSE DETAIL PAGE ===== -->
+<div id="coursePage" class="detail-page">
+  <div class="detail-header">
+    <button class="back-btn" onclick="goBack()">← वापस</button>
+    <h2 id="courseTitle">Rawat Academy</h2>
+  </div>
+  <div id="contentArea">
+    <!-- Subjects / Topics / Videos dynamically loaded here -->
+  </div>
 </div>
 
 <script>
-// ============ RWA BATCH DATA ============
-const DATA = [
-  {id:582,t:"UP Police Constable - खाकी Again बैच",p:"₹799",g:"UP Police"},
-  {id:581,t:"UPSI भर्ती - थानेदार बैच",p:"₹899",g:"UP Police"},
-  {id:580,t:"UP,MP,राजस्थान PCB 12th Toppers 2027",p:"₹999",g:"School"},
-  {id:579,t:"UP,MP,राजस्थान PCM 12th Toppers 2027",p:"₹999",g:"School"},
-  {id:578,t:"NEET UG 2027 - प्रारम्भ 3.0 बैच",p:"₹1499",g:"NEET/JEE"},
-  {id:577,t:"UP PCS PRELIMS 2026 - प्रतिज्ञा बैच",p:"₹999",g:"UPSSSC"},
-  {id:576,t:"Airforce Phase-2 Astra Online 3.0",p:"₹1499",g:"Airforce"},
-  {id:575,t:"DELHI POLICE 2026-27 CONSTABLE VOD",p:"₹499",g:"Delhi Police"},
-  {id:574,t:"Haryana Group-C CET Mains सुरक्षा चक्र",p:"₹899",g:"CAPF/BSF"},
-  {id:573,t:"AIRFORCE - वायु 2/2027 Y-Group+ MA",p:"PAID",g:"Airforce"},
-  {id:572,t:"AIRFORCE - वायु 2/2027 X-Group",p:"PAID",g:"Airforce"},
-  {id:571,t:"SSC GD भर्ती 2027 (वीर बैच)",p:"PAID",g:"SSC"},
-  {id:568,t:"Haryana CET Group-C 2026",p:"₹899",g:"CAPF/BSF"},
-  {id:565,t:"Railway RRB NTPC 2026",p:"₹899",g:"Railway"},
-  {id:564,t:"Railway RRB Group D 2026",p:"₹699",g:"Railway"},
-  {id:563,t:"SSC CGL 2025-26",p:"₹1499",g:"SSC"},
-  {id:562,t:"SSC CHSL 2025-26",p:"₹999",g:"SSC"},
-  {id:561,t:"SSC MTS 2025-26",p:"₹799",g:"SSC"},
-  {id:560,t:"SSC Stenographer 2025",p:"₹699",g:"SSC"},
-  {id:559,t:"SSC Selection Post 2025",p:"₹599",g:"SSC"},
-  {id:558,t:"UPPCS Prelims 2026",p:"₹1299",g:"UPSSSC"},
-  {id:557,t:"UPPCS Mains 2026",p:"₹1999",g:"UPSSSC"},
-  {id:556,t:"UPSC Prelims 2026",p:"₹2999",g:"Other"},
-  {id:555,t:"UPSC CSAT 2026",p:"₹999",g:"Other"},
-  {id:554,t:"Teaching Superpack 2026",p:"₹999",g:"Teaching"},
-  {id:553,t:"CTET 2026 Complete",p:"₹899",g:"Teaching"},
-  {id:552,t:"UPTET 2025-26",p:"₹799",g:"Teaching"},
-  {id:551,t:"SUPERTET 2025-26",p:"₹999",g:"Teaching"},
-  {id:550,t:"DSSSB 2025-26",p:"₹999",g:"Teaching"},
-  {id:549,t:"KVS 2025-26",p:"₹899",g:"Teaching"},
-  {id:548,t:"NVS 2025-26",p:"₹899",g:"Teaching"},
-  {id:547,t:"EMRS 2025-26",p:"₹799",g:"Teaching"},
-  {id:546,t:"Army GD 2026",p:"₹499",g:"Army"},
-  {id:545,t:"Army Clerk 2026",p:"₹599",g:"Army"},
-  {id:544,t:"Army Technical 2026",p:"₹699",g:"Army"},
-  {id:543,t:"Army Nursing Assistant 2026",p:"₹699",g:"Army"},
-  {id:542,t:"NDA 2026",p:"₹1999",g:"NDA/CDS"},
-  {id:541,t:"CDS 2026",p:"₹1999",g:"NDA/CDS"},
-  {id:540,t:"AFCAT 2026",p:"₹1499",g:"Airforce"},
-  {id:539,t:"Airforce X-Y Group 2026",p:"₹999",g:"Airforce"},
-  {id:538,t:"Navy AA 2026",p:"₹699",g:"Navy"},
-  {id:537,t:"Navy SSR 2026",p:"₹699",g:"Navy"},
-  {id:536,t:"Navy MR 2026",p:"₹499",g:"Navy"},
-  {id:535,t:"BSF HCM 2026",p:"₹699",g:"CAPF/BSF"},
-  {id:534,t:"BSF ASI 2026",p:"₹799",g:"CAPF/BSF"},
-  {id:533,t:"CAPF 2026",p:"₹999",g:"CAPF/BSF"},
-  {id:532,t:"CRPF 2026",p:"₹699",g:"CAPF/BSF"},
-  {id:531,t:"IB Security Assistant 2026",p:"₹599",g:"CAPF/BSF"},
-  {id:530,t:"CISF 2026",p:"₹699",g:"CAPF/BSF"},
-  {id:529,t:"SSB 2026",p:"₹999",g:"CAPF/BSF"},
-  {id:528,t:"ITBP 2026",p:"₹699",g:"CAPF/BSF"},
-  {id:527,t:"UP SI 2026 Practice Sets",p:"₹499",g:"UP Police"},
-  {id:526,t:"UP Constable 2026 Practice Sets",p:"₹399",g:"UP Police"},
-  {id:525,t:"Delhi Police Constable 2026",p:"₹599",g:"Delhi Police"},
-  {id:524,t:"Delhi Police SI 2026",p:"₹799",g:"Delhi Police"},
-  {id:523,t:"MP Police 2026",p:"₹599",g:"UP Police"},
-  {id:522,t:"Bihar Police 2026",p:"₹599",g:"UP Police"},
-  {id:521,t:"Rajasthan Police 2026",p:"₹599",g:"UP Police"},
-  {id:520,t:"Railway ALP 2026",p:"₹899",g:"Railway"},
-  {id:519,t:"Railway Technician 2026",p:"₹799",g:"Railway"},
-  {id:518,t:"Railway JE 2026",p:"₹1299",g:"Railway"},
-  {id:517,t:"Railway ASM 2026",p:"₹699",g:"Railway"},
-  {id:516,t:"Railway TC 2026",p:"₹599",g:"Railway"},
-  {id:515,t:"Bank PO 2026",p:"₹1499",g:"Banking"},
-  {id:514,t:"Bank Clerk 2026",p:"₹999",g:"Banking"},
-  {id:513,t:"IBPS RRB 2026",p:"₹899",g:"Banking"},
-  {id:512,t:"SBI PO 2026",p:"₹1499",g:"Banking"},
-  {id:511,t:"SBI Clerk 2026",p:"₹999",g:"Banking"},
-  {id:510,t:"RBI Assistant 2026",p:"₹999",g:"Banking"},
-  {id:509,t:"NABARD 2026",p:"₹1299",g:"Banking"},
-  {id:508,t:"SEBI 2026",p:"₹1499",g:"Banking"},
-  {id:507,t:"UPSSSC VDO 2026",p:"₹799",g:"UPSSSC"},
-  {id:506,t:"UPSSSC PET 2026",p:"₹599",g:"UPSSSC"},
-  {id:505,t:"UPSSSC Forest Guard 2026",p:"₹699",g:"UPSSSC"},
-  {id:504,t:"UPSSSC Agriculture 2026",p:"₹799",g:"UPSSSC"},
-  {id:503,t:"UPSSSC Mandi Parishad 2026",p:"₹699",g:"UPSSSC"},
-  {id:502,t:"NEET UG 2027 Complete",p:"₹2999",g:"NEET/JEE"},
-  {id:501,t:"NEET UG Practice 2027",p:"₹1499",g:"NEET/JEE"},
-  {id:500,t:"JEE Main 2027",p:"₹2999",g:"NEET/JEE"},
-  {id:499,t:"JEE Advanced 2027",p:"₹3999",g:"NEET/JEE"},
-  {id:498,t:"NEET PG 2027",p:"₹4999",g:"NEET/JEE"},
-  {id:497,t:"10th Class All Subjects 2026",p:"₹999",g:"School"},
-  {id:496,t:"11th Class Science 2026",p:"₹1499",g:"School"},
-  {id:495,t:"12th Class Science 2026",p:"₹1499",g:"School"},
-  {id:494,t:"12th Class Commerce 2026",p:"₹1299",g:"School"},
-  {id:493,t:"12th Class Arts 2026",p:"₹999",g:"School"},
-  {id:492,t:"Bihar Board 10th 2027",p:"₹799",g:"School"},
-  {id:491,t:"Bihar Board 12th 2027",p:"₹999",g:"School"},
-  {id:490,t:"UP Board 10th 2027",p:"₹799",g:"School"},
-  {id:489,t:"UP Board 12th 2027",p:"₹999",g:"School"}
-];
+// ===== CONFIG =====
+const CORS_PROXY = 'https://api.allorigins.win/raw?url=';  // Free CORS proxy
+// Alternative proxies if needed:
+// const CORS_PROXY = 'https://corsproxy.io/?' ;
+// const CORS_PROXY = 'https://api.codetabs.com/v1/proxy?quest=';
 
-const IMG = "https://appx-content-v2.classx.co.in/paid_course3/2026-06-30-0.7503537082274693.jpeg";
-let loaded = 0, filter = "All", currentPage = "home";
+let historyStack = [];  // Navigation history
 
-// ============ SIDEBAR ============
-function toggleMenu(){
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('overlay').style.display = 
-    document.getElementById('sidebar').classList.contains('open') ? 'block' : 'none';
+// ===== OPEN COURSE =====
+function openCourse(e, courseId) {
+  if(e) e.preventDefault();
+  document.getElementById('mainPage').classList.add('hidden');
+  document.getElementById('coursePage').classList.add('active');
+  document.getElementById('courseTitle').textContent = 'Rawat Academy • कोर्स';
+  historyStack = [{type: 'course', id: courseId}];
+  loadSubjects(courseId);
 }
 
-// ============ PAGE SWITCHING ============
-function showPage(page){
-  // Hide all pages
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  // Show selected page
-  document.getElementById('page-'+page).classList.add('active');
-  // Update nav tabs
-  document.querySelectorAll('.nav div').forEach(n=>n.classList.remove('on'));
-  document.getElementById('nav-'+page).classList.add('on');
-  // Update sidebar items
-  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('on'));
+// ===== LOAD SUBJECTS =====
+async function loadSubjects(courseId) {
+  const area = document.getElementById('contentArea');
+  area.innerHTML = '<div class="loading">⏳ विषय लोड हो रहे हैं...</div>';
   
-  // Close sidebar
-  toggleMenu();
-  
-  currentPage = page;
-}
-
-// ============ BATCH RENDER ============
-function buildTags(){
-  const tags = ["All","SSC","Teaching","School","NDA/CDS","Army","Airforce","Navy","CAPF/BSF","UP Police","Delhi Police","Railway","Banking","UPSSSC","NEET/JEE","Other"];
-  const el = document.getElementById('tags');
-  tags.forEach(t=>{
-    const span = document.createElement('span');
-    span.className = "tag"+(t=="All"?" on":"");
-    span.textContent = t;
-    span.onclick = ()=>{
-      document.querySelectorAll('.tag').forEach(x=>x.classList.remove('on'));
-      span.classList.add('on');
-      filter = t;
-      loaded = 0;
-      document.querySelectorAll('#list .card').forEach(x=>x.remove());
-      render();
-    };
-    el.appendChild(span);
-  });
-}
-
-function render(){
-  const el = document.getElementById('list');
-  const f = filter=="All" ? DATA : DATA.filter(x=>x.g==filter);
-  const batch = f.slice(loaded, loaded+12);
-  
-  batch.forEach(b=>{
-    const div = document.createElement('div');
-    div.className = "card";
-    div.innerHTML = `
-      <div class="left">
-        <img src="${IMG}" onerror="this.src='https://spidyuniverserwa.vercel.app/Lalit.jpg'">
-        <div class="info">
-          <h3>${b.t}</h3>
-          <span>${b.p}</span>
+  try {
+    // Fetch from SpidyUniverse course page
+    const url = `https://spidyuniverserwa.vercel.app/course/${courseId}`;
+    const resp = await fetch(CORS_PROXY + encodeURIComponent(url));
+    const html = await resp.text();
+    
+    // Parse subjects from HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const links = doc.querySelectorAll('a[href*="/course/' + courseId + '/subject/"]');
+    
+    let subjectsHtml = '<div class="section-title">📚 विषय (Subjects)</div><div class="subjects-grid">';
+    let found = new Set();
+    
+    links.forEach(link => {
+      const href = link.getAttribute('href');
+      const subjectId = href.split('/subject/')[1];
+      if(found.has(subjectId)) return;
+      found.add(subjectId);
+      
+      const img = link.querySelector('img');
+      const titleEl = link.querySelector('h3, h4, h5, .title, b, strong') || link;
+      const title = titleEl.textContent.trim();
+      const imgSrc = img ? img.getAttribute('src') : 'https://via.placeholder.com/200x100/1a1a3a/f0c040?text=Rawat';
+      
+      subjectsHtml += `
+        <div class="subject-card" onclick="loadTopics('${courseId}', '${subjectId}', '${title.replace(/'/g, "\\'")}')">
+          <img src="${imgSrc}" alt="${title}" onerror="this.src='https://via.placeholder.com/200x100/1a1a3a/f0c040?text=Rawat'">
+          <h4>${title}</h4>
         </div>
-      </div>
-      <i class="fas fa-chevron-right"></i>
-    `;
-    div.onclick = ()=> window.open(`https://spidyuniverserwa.vercel.app/course/${b.id}`,'_blank');
-    el.appendChild(div);
-  });
-  
-  loaded += batch.length;
-  document.querySelectorAll('#list .more').forEach(x=>x.remove());
-  
-  if(loaded < f.length){
-    const btn = document.createElement('div');
-    btn.className = "card more";
-    btn.textContent = `Load More +${f.length-loaded}`;
-    btn.onclick = render;
-    el.appendChild(btn);
+      `;
+    });
+    
+    subjectsHtml += '</div>';
+    
+    if(found.size === 0) {
+      // Fallback: try getting course name at least
+      const titleEl = doc.querySelector('title');
+      area.innerHTML = `<div class="loading">⚠️ इस कोर्स में कोई विषय उपलब्ध नहीं है।<br><small>${titleEl ? titleEl.textContent : ''}</small></div>`;
+    } else {
+      area.innerHTML = subjectsHtml;
+    }
+  } catch(err) {
+    area.innerHTML = `<div class="loading">❌ लोड करने में त्रुटि: ${err.message}</div>`;
   }
 }
 
-function searchBatch(){
-  const q = document.getElementById('search').value.toLowerCase();
-  document.querySelectorAll('#list .card:not(.more)').forEach(c=>{
-    c.style.display = c.querySelector('h3').innerText.toLowerCase().includes(q) ? "flex" : "none";
+// ===== LOAD TOPICS =====
+async function loadTopics(courseId, subjectId, subjectTitle) {
+  const area = document.getElementById('contentArea');
+  area.innerHTML = '<div class="loading">⏳ टॉपिक लोड हो रहे हैं...</div>';
+  historyStack.push({type: 'subjects', courseId});
+  
+  try {
+    const url = `https://spidyuniverserwa.vercel.app/course/${courseId}/subject/${subjectId}`;
+    const resp = await fetch(CORS_PROXY + encodeURIComponent(url));
+    const html = await resp.text();
+    
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    // Get topics from subject page
+    const links = doc.querySelectorAll('a[href*="/topic/"]');
+    
+    let topicsHtml = `<div class="section-title">📖 ${subjectTitle}</div><div class="topics-grid">`;
+    let found = new Set();
+    
+    links.forEach(link => {
+      const href = link.getAttribute('href');
+      const topicId = href.split('/topic/')[1];
+      if(found.has(topicId)) return;
+      found.add(topicId);
+      
+      const title = link.textContent.trim().replace('Video Lecture', '').trim();
+      
+      topicsHtml += `
+        <div class="topic-card" onclick="loadVideos('${courseId}', '${subjectId}', '${topicId}', '${title.replace(/'/g, "\\'")}')">
+          <h4>▶ ${title}</h4>
+        </div>
+      `;
+    });
+    
+    topicsHtml += '</div>';
+    
+    if(found.size === 0) {
+      // Maybe this subject has video list directly in topic page
+      area.innerHTML = topicsHtml = `<div class="section-title">📖 ${subjectTitle}</div><div class="loading">इस विषय में कोई टॉपिक नहीं है</div>`;
+    }
+    
+    area.innerHTML = topicsHtml;
+  } catch(err) {
+    area.innerHTML = `<div class="loading">❌ लोड करने में त्रुटि: ${err.message}</div>`;
+  }
+}
+
+// ===== LOAD VIDEOS =====
+async function loadVideos(courseId, subjectId, topicId, topicTitle) {
+  const area = document.getElementById('contentArea');
+  area.innerHTML = '<div class="loading">⏳ वीडियो लोड हो रहे हैं...</div>';
+  historyStack.push({type: 'topics', courseId, subjectId});
+  
+  try {
+    const url = `https://spidyuniverserwa.vercel.app/course/${courseId}/subject/${subjectId}/topic/${topicId}`;
+    const resp = await fetch(CORS_PROXY + encodeURIComponent(url));
+    const html = await resp.text();
+    
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    // Get all video lecture links
+    const links = doc.querySelectorAll('a[href*="/topic/"]');
+    
+    // Also find if there's an iframe or video player
+    const iframes = doc.querySelectorAll('iframe');
+    const videoSrcs = doc.querySelectorAll('[src*="youtube"], [src*="youtu.be"], [src*="appx-content"], [src*="classx"]');
+    
+    let videosHtml = `<div class="section-title">🎬 ${topicTitle}</div>`;
+    
+    // If there's an embedded player, show it
+    if(iframes.length > 0 || videoSrcs.length > 0) {
+      let playerSrc = '';
+      if(iframes.length > 0) playerSrc = iframes[0].getAttribute('src');
+      else if(videoSrcs.length > 0) playerSrc = videoSrcs[0].getAttribute('src');
+      
+      if(playerSrc) {
+        videosHtml += `
+          <div class="video-player-container">
+            <iframe src="${playerSrc}" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+          </div>
+        `;
+      }
+    }
+    
+    // List all videos
+    let found = new Set();
+    let videoCount = 0;
+    
+    links.forEach(link => {
+      const href = link.getAttribute('href');
+      const vidTopicId = href.split('/topic/')[1];
+      if(found.has(vidTopicId)) return;
+      found.add(vidTopicId);
+      videoCount++;
+      
+      const title = link.textContent.trim() || 'Video ' + videoCount;
+      
+      videosHtml += `
+        <div class="video-item" onclick="playVideo('${courseId}', '${subjectId}', '${vidTopicId}')">
+          <div class="play-icon">▶</div>
+          <div class="video-title">${title}</div>
+        </div>
+      `;
+    });
+    
+    if(videoCount === 0) {
+      videosHtml += `<div class="loading">इस Topic में कोई वीडियो नहीं है</div>`;
+    }
+    
+    area.innerHTML = videosHtml;
+  } catch(err) {
+    area.innerHTML = `<div class="loading">❌ लोड करने में त्रुटि: ${err.message}</div>`;
+  }
+}
+
+// ===== PLAY VIDEO (Navigate to SpidyUniverse topic page with our proxy) =====
+function playVideo(courseId, subjectId, topicId) {
+  // Open in a new page on our site using proxy
+  const area = document.getElementById('contentArea');
+  area.innerHTML = '<div class="loading">⏳ वीडियो प्लेयर लोड हो रहा है...</div>';
+  
+  const topicUrl = `https://spidyuniverserwa.vercel.app/course/${courseId}/subject/${subjectId}/topic/${topicId}`;
+  
+  // Use proxy to fetch the page
+  fetch(CORS_PROXY + encodeURIComponent(topicUrl))
+    .then(r => r.text())
+    .then(html => {
+      // Find iframe/video source
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const iframe = doc.querySelector('iframe');
+      
+      if(iframe) {
+        const src = iframe.getAttribute('src');
+        area.innerHTML = `
+          <div class="section-title">🎬 वीडियो</div>
+          <div class="video-player-container">
+            <iframe src="${src}" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+          </div>
+          <button class="back-btn" onclick="history.back()" style="margin-top:10px">← वापस</button>
+        `;
+      } else {
+        // Try to open directly - maybe it's a YouTube video
+        const youtubeLinks = doc.querySelectorAll('[href*="youtube"], [href*="youtu.be"]');
+        if(youtubeLinks.length > 0) {
+          let ytUrl = youtubeLinks[0].getAttribute('href');
+          // Convert to embed
+          let videoId = '';
+          if(ytUrl.includes('youtube.com/watch?v=')) videoId = ytUrl.split('v=')[1]?.split('&')[0];
+          else if(ytUrl.includes('youtu.be/')) videoId = ytUrl.split('youtu.be/')[1]?.split('?')[0];
+          
+          if(videoId) {
+            area.innerHTML = `
+              <div class="section-title">🎬 वीडियो</div>
+              <div class="video-player-container">
+                <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+              </div>
+              <button class="back-btn" onclick="history.back()" style="margin-top:10px">← वापस</button>
+            `;
+            return;
+          }
+        }
+        
+        // Last resort: show the page inside our UI
+        area.innerHTML = `
+          <div class="section-title">🎬 वीडियो</div>
+          <div style="background:#1a1a3a; border-radius:12px; padding:15px; max-height:500px; overflow:auto;">
+            ${html.replace(/Spidy Universe/gi, 'Rawat Academy').replace(/SPIDY UNIVERSE/gi, 'RAWAT ACADEMY').replace(/Lalit/gi, 'Rawat').replace(/spidyuniverserwa/g, 'rwa-html-six').replace(/Lalit\.jpg/g, '')}
+          </div>
+          <button class="back-btn" onclick="history.back()" style="margin-top:10px">← वापस</button>
+        `;
+      }
+    })
+    .catch(err => {
+      area.innerHTML = `<div class="loading">❌ वीडियो लोड नहीं हुआ: ${err.message}</div>`;
+    });
+}
+
+// ===== GO BACK =====
+function goBack() {
+  if(historyStack.length === 0) {
+    document.getElementById('coursePage').classList.remove('active');
+    document.getElementById('mainPage').classList.remove('hidden');
+    return;
+  }
+  
+  const prev = historyStack.pop();
+  
+  if(!prev) {
+    document.getElementById('coursePage').classList.remove('active');
+    document.getElementById('mainPage').classList.remove('hidden');
+    return;
+  }
+  
+  if(prev.type === 'course' || historyStack.length === 0) {
+    // Go back to main page
+    document.getElementById('coursePage').classList.remove('active');
+    document.getElementById('mainPage').classList.remove('hidden');
+  } else if(prev.type === 'subjects') {
+    loadSubjects(prev.courseId);
+  } else if(prev.type === 'topics') {
+    const last = historyStack[historyStack.length - 1];
+    loadTopics(last.courseId, last.subjectId, '');
+  }
+}
+
+// ===== INIT: Update all batch cards to use our custom pages =====
+document.addEventListener('DOMContentLoaded', function() {
+  // Convert all existing batch card links
+  document.querySelectorAll('a[href*="spidyuniverserwa.vercel.app/course/"]').forEach(link => {
+    const match = link.href.match(/\/course\/(\d+)/);
+    if(match) {
+      const courseId = match[1];
+      link.removeAttribute('href');
+      link.style.cursor = 'pointer';
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        openCourse(e, courseId);
+      });
+    }
   });
-}
-
-// ============ CLOCK ============
-let sec = 0, mins = 0, lecs = 0;
-function clock(){
-  setInterval(()=>{
-    sec++;
-    let h = Math.floor(sec/3600);
-    let m = Math.floor((sec%3600)/60);
-    let s = sec%60;
-    document.getElementById('tmr').textContent = h+"h "+(m<10?"0":"")+m+"m";
-    document.getElementById('app-timer').textContent = h+"h "+m+"m "+s+"s";
-    if(sec%60==0){mins++;document.getElementById('study-timer').textContent="0h "+mins+"m"}
-    if(sec%300==0){lecs++;document.getElementById('lec-count').textContent=lecs+" Lecs"}
-  },1000);
-}
-
-// ============ INIT ============
-buildTags();
-render();
-clock();
+  
+  // Also handle inline onclick if you hardcoded them
+});
 </script>
 </body>
 </html>
