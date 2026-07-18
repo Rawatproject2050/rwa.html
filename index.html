@@ -722,7 +722,10 @@
         let seconds = 0; let studyMins = 0; let lecs = 0;
         let currentPage = 'home'; // Tracks history flow state
 
-        function initSystem() {
+        function initSystem() {// Service worker register karo
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+        }
             const hour = new Date().getHours();
             if (hour >= 6 && hour < 18) {
                 document.body.classList.add('light-theme');
